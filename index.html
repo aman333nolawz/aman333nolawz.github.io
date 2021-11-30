@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nolawz's Portfolio</title>
+    <link rel="stylesheet" href="css/main.css" />
+
+    <!-- lightbox -->
+    <link href="./lightbox/dist/css/lightbox.min.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div class="nav-container">
+      <header>
+        <a href="/" class="logo">Nolawz</a>
+        <nav>
+          <ul>
+            <li>
+              <a class="hover-animation" href="/#certificates">Certificates</a>
+            </li>
+            <li><a class="hover-animation" href="/#contact">Contact Me</a></li>
+          </ul>
+        </nav>
+      </header>
+    </div>
+
+    <div class="hero">
+      <div class="content">
+        <div class="name">
+          <h1>Nolawz</h1>
+          <div class="social-icons">
+            <a
+              href="http://github.com/aman333nolawz"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://img.icons8.com/material-sharp/50/fc97a2/github.png"
+                alt="Github"
+                title="Github"
+              />
+            </a>
+
+            <a
+              href="https://aman333nolawz.github.io/My-Writeups/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://img.icons8.com/material-sharp/50/fc97a2/internet.png"
+                alt="Writeups"
+                title="My Writeups"
+              />
+            </a>
+          </div>
+        </div>
+
+        <div class="info">
+          <p class="role">Hacker and Python developer</p>
+          <div class="info-content">
+            I am a computer enthususiast who likes to develop some fun apps in
+            python and who loves to play CTFs. I know languages like
+            <span class="lang">Python</span>,
+            <span class="lang">HTML & CSS</span>(If you count it),
+            <span class="lang">Javascript</span>,
+            <span class="lang">Java</span>,
+            <span class="lang">C/C++</span>
+            and many more...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="portfolio" id="certificates">
+      <cert src="/images/certs/ehacon.jpg" name="Ehacon CTF"></cert>
+      <cert src="/images/certs/sacramentum.png" name="Sacramentum CTF"></cert>
+      <cert src="/images/certs/damncon.png" name="Damncon CTF"></cert>
+    </section>
+
+    <div class="contact" id="contact">
+      <h1>Contact Me</h1>
+      <form
+        action="https://formsubmit.co/nolawz46@gmail.com"
+        method="POST"
+        class="contact-form"
+      >
+        <input
+          type="text"
+          name="name"
+          class="contact-form-text"
+          placeholder="Your name"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          class="contact-form-text"
+          placeholder="Your email"
+          required
+        />
+        <input
+          type="tel"
+          name="phone"
+          class="contact-form-text"
+          placeholder="Your phone"
+          required
+        />
+        <textarea
+          class="contact-form-text"
+          placeholder="Your message"
+          name="message"
+          required
+        ></textarea>
+
+        <input
+          type="hidden"
+          name="_next"
+          value="http://aman333nolawz.github.io/pages/thanks.html"
+        />
+        <input type="hidden" name="_template" value="table" />
+        <input type="submit" class="btn contact-form-btn" value="Send" />
+      </form>
+    </div>
+  </body>
+  <script type="text/javascript" src="./js/template.js"></script>
+  <!-- lightbox -->
+  <script src="./lightbox/dist/js/lightbox-plus-jquery.min.js"></script>
+</html>
