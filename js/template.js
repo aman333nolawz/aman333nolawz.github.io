@@ -53,7 +53,6 @@ function certificate(element) {
 
 customTag("cert", certificate);
 
-customTag("css", css);
 customTag("SocialMetaTags", socialMetaTags);
 customTag("navbar", navbar);
 customTag("Footer", customFooter);
