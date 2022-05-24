@@ -7,12 +7,14 @@
 }
 
 :root {
-  --primary-color: hsl(0, 0%, 13%);
-  --primary-accent-color: hsl(0, 0%, 11%);
-  --primary-dark-color: hsl(0, 0%, 7%);
-  --sec-color: hsl(353, 95%, 59%);
-  --third-color: hsl(212, 33%, 49%);
+  --primary-color: hsl(231, 15%, 18%);
+  --primary-accent-color: hsl(231, 15%, 16%);
+  --primary-dark-color: hsl(231, 15%, 12%);
+  --sec-color: hsl(326, 100%, 74%);
+  --third-color: hsl(191, 97%, 77%);
   --text-color: hsl(100, 36%, 95%);
+
+  --lang-span-color: var(--sec-color), hsl(326, 100%, 76%), hsl(326, 100%, 78%), hsl(326, 100%, 80%), hsl(326, 100%, 82%);
 }
 
 html {
@@ -192,14 +194,14 @@ section {
 }
 
 span.lang {
-  background-image: linear-gradient(
-    to right top,
-    #fa314a,
-    #f75e6a,
-    #f07f88,
-    #e49da3,
-    #d4b8bb
-  );
+  // background-image: linear-gradient(to right top,
+  //     #fa314a,
+  //     #f75e6a,
+  //     #f07f88,
+  //     #e49da3,
+  //     #d4b8bb);
+  background-image: linear-gradient(to right top,
+      var(--lang-span-color));
   color: #111111;
   padding: 0 0.3125rem;
   font-weight: 500;
