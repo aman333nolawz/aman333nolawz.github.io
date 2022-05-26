@@ -10,9 +10,19 @@
   --primary-accent-color: hsl(231, 15%, 16%);
   --primary-dark-color: hsl(231, 15%, 12%);
   --sec-color: hsl(326, 100%, 74%);
-  --third-color: hsl(191, 97%, 77%);
+  --third-color: hsl(135, 94%, 65%);
   --text-color: hsl(100, 36%, 95%);
   --lang-span-color: var(--sec-color), hsl(326, 100%, 76%), hsl(326, 100%, 78%), hsl(326, 100%, 80%), hsl(326, 100%, 82%);
+}
+
+*::-moz-selection {
+  background: var(--third-color);
+  color: #0e0811;
+}
+
+*::selection {
+  background: var(--third-color);
+  color: #0e0811;
 }
 
 html {
