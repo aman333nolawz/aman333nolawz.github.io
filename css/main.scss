@@ -14,17 +14,16 @@
   --third-color: hsl(135, 94%, 65%);
   --text-color: hsl(100, 36%, 95%);
 
-  --lang-span-color: var(--sec-color), hsl(326, 100%, 76%), hsl(326, 100%, 78%), hsl(326, 100%, 80%), hsl(326, 100%, 82%);
+  --lang-span-color: var(--sec-color), hsl(326, 100%, 76%), hsl(326, 100%, 78%),
+    hsl(326, 100%, 80%), hsl(326, 100%, 82%);
 }
 
 $text-color: hsl(100, 36%, 95%);
-
 
 *::selection {
   background: var(--third-color);
   color: invert($color: $text-color);
 }
-
 
 html {
   scroll-behavior: smooth;
@@ -104,7 +103,7 @@ header {
 .hero {
   display: grid;
   text-align: center;
-  padding: 4em;
+  margin: 4em;
 }
 
 section {
@@ -203,14 +202,12 @@ section {
 }
 
 span.lang {
-  background-image: linear-gradient(to right top,
-      var(--lang-span-color));
+  background-image: linear-gradient(to right top, var(--lang-span-color));
   color: #111111;
   padding: 0 0.3125rem;
   font-weight: 500;
   line-height: 1.8;
 }
-
 
 .btn {
   padding: 0.3125rem 0.9375rem;
