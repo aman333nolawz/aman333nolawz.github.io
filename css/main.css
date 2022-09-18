@@ -1,8 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap");
+@font-face {
+  font-family: "Fira Code";
+  src: url("../fonts/Fira Code Regular Nerd Font Complete.ttf");
+}
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+}
 
 :root {
   --primary-color: hsl(231, 15%, 18%);
@@ -12,31 +17,37 @@
   --third-color: hsl(135, 94%, 65%);
   --text-color: hsl(100, 36%, 95%);
   --lang-span-color: var(--sec-color), hsl(326, 100%, 76%), hsl(326, 100%, 78%),
-    hsl(326, 100%, 80%), hsl(326, 100%, 82%); }
+    hsl(326, 100%, 80%), hsl(326, 100%, 82%);
+}
 
 *::selection {
   background: var(--third-color);
-  color: #0e0811; }
+  color: #0e0811;
+}
 
 html {
-  scroll-behavior: smooth; }
+  scroll-behavior: smooth;
+}
 
 body {
   height: 100vh;
   margin: 0;
   font-family: "Poppins", Arial, Helvetica, sans-serif;
   background-color: var(--primary-color);
-  color: var(--text-color); }
+  color: var(--text-color);
+}
 
 ul {
   list-style-type: none;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+}
 
 a {
   display: inline-block;
   position: relative;
-  text-decoration: none; }
+  text-decoration: none;
+}
 
 .hover-animation::after {
   content: "";
@@ -48,118 +59,155 @@ a {
   transform: scaleX(0);
   background-color: var(--sec-color);
   transform-origin: bottom right;
-  transition: transform 0.25s ease; }
+  transition: transform 0.25s ease;
+}
 
 .hover-animation:hover::after {
   transform: scaleX(1);
-  transform-origin: bottom left; }
+  transform-origin: bottom left;
+}
 
 img {
-  width: 100%; }
+  width: 100%;
+}
 
-.nav-container {
-  background-color: var(--primary-color); }
-  .nav-container a {
-    color: #ffffff; }
-
-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 1.25em; }
-  header .logo {
-    color: var(--sec-color);
-    font-weight: bold; }
-  header ul {
-    display: flex; }
-    header ul a {
-      display: block;
-      margin: 0 1em; }
+nav {
+  background-color: var(--primary-color);
+  /* margin: 1.25rem 0; */
+  padding: 1.25em 1em;
+}
+nav a {
+  color: #ffffff;
+  float: right;
+  margin: 0 1em;
+}
+nav .logo a {
+  float: left;
+  color: var(--sec-color);
+  font-weight: bold;
+}
+nav .toggle {
+  display: none;
+  cursor: pointer;
+  font-family: "Fira Code";
+}
 
 .hero {
   display: grid;
   text-align: center;
-  margin: 4em 2em; }
+  margin: 4em 2em;
+}
 
 section {
-  padding: 4em 2em; }
+  padding: 4em 2em;
+}
 
 .featured {
-  position: relative; }
+  position: relative;
+}
 
 .subtitle {
   text-transform: uppercase;
   font-weight: bold;
   color: var(--sec-color) !important;
   letter-spacing: 0.1em;
-  font-size: 0.85em; }
+  font-size: 0.85em;
+}
 
 .featured-title {
   font-weight: bold;
   color: var(--text-color);
   font-size: 1.3em;
   margin-top: -0.4em;
-  display: block; }
+  display: block;
+}
 
 .featured-desc {
-  color: #d4e7cb;
+  color: hsl(100deg, 36%, 85%);
   margin-bottom: 3em;
   font-size: 0.85em;
   line-height: 1.8em;
-  font-weight: 500; }
+  font-weight: 500;
+}
 
 .skills-container ul li {
   background: var(--primary-accent-color);
   padding: 2em;
   border-radius: 1em;
-  margin-bottom: 1em; }
-  .skills-container ul li .icon-container {
-    height: 50px;
-    display: grid;
-    place-content: center;
-    margin: 0 auto; }
-  .skills-container ul li .skill-title {
-    font-weight: bold;
-    text-align: center; }
-  .skills-container ul li .featured-desc {
-    margin-bottom: 2em; }
+  margin-bottom: 1em;
+}
+.skills-container ul li .icon-container {
+  height: 50px;
+  display: grid;
+  place-content: center;
+  margin: 0 auto;
+}
+.skills-container ul li .skill-title {
+  font-weight: bold;
+  text-align: center;
+}
+.skills-container ul li .featured-desc {
+  margin-bottom: 2em;
+}
 
 .portfolio {
   background-color: var(--primary-accent-color);
-  text-align: center; }
-  .portfolio img {
-    margin-top: 1em;
-    box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 10px 0px;
-    object-fit: contain;
-    image-rendering: crisp-edges; }
+  text-align: center;
+}
+.portfolio img {
+  margin-top: 1em;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 5px 10px 0px;
+  object-fit: contain;
+  image-rendering: crisp-edges;
+}
 
 .portfolio-container a img {
   border-radius: 1em;
-  margin-bottom: 2em; }
+  margin-bottom: 2em;
+}
 
 .content .role {
   margin-block: 1rem;
-  color: var(--sec-color); }
+  color: var(--sec-color);
+}
 
 .social-icons img {
-  width: 1.875rem; }
+  width: 1.875rem;
+}
 
 .content .name {
   display: flex;
   flex-direction: column;
-  align-items: center; }
-  .content .name h1 {
-    max-width: 9ch;
-    font-size: 5rem;
-    font-weight: 700;
-    text-align: right;
-    line-height: 1.2; }
+  align-items: center;
+}
+.content .name h1 {
+  max-width: 9ch;
+  font-size: 5rem;
+  font-weight: 700;
+  text-align: right;
+  line-height: 1.2;
+}
 
 span.lang {
   background-image: linear-gradient(to right top, var(--lang-span-color));
   color: #111111;
   padding: 0 0.3125rem;
   font-weight: 500;
-  line-height: 1.8; }
+  line-height: 1.8;
+}
+
+#languages h1 {
+  font-size: 4rem;
+}
+#languages .info {
+  display: initial;
+  text-align: center;
+}
+#languages img {
+  width: 7.5rem;
+  box-shadow: none;
+  border: none;
+}
 
 .btn {
   padding: 0.3125rem 0.9375rem;
@@ -169,20 +217,22 @@ span.lang {
   cursor: pointer;
   transition: all 0.22s ease-in-out 0s;
   border: 3px solid var(--sec-color);
-  box-shadow: var(--sec-color) 2px 2px 0 0; }
+  box-shadow: var(--sec-color) 2px 2px 0 0;
+}
 
 .btn:hover {
-  box-shadow: var(--sec-color) 5px 5px 0 0; }
+  box-shadow: var(--sec-color) 5px 5px 0 0;
+}
 
 .contact h1 {
-  text-align: center; }
-
+  text-align: center;
+}
 .contact .contact-form {
   max-width: 50rem;
   margin: auto;
   padding: 0 0.625rem;
-  overflow: hidden; }
-
+  overflow: hidden;
+}
 .contact .contact-form-text {
   display: block;
   width: 100%;
@@ -192,19 +242,20 @@ span.lang {
   background-color: var(--primary-dark-color);
   color: var(--text-color);
   padding: 1.25rem 2.5rem;
-  outline: none; }
-
+  outline: none;
+}
 .contact .contact-form-text:focus-visible {
   border: 1px solid var(--sec-color);
-  box-shadow: 0 0 0.625rem 0.25rem rgba(0, 0, 0, 0.2); }
-
+  box-shadow: 0 0 0.625rem 0.25rem rgba(0, 0, 0, 0.2);
+}
 .contact textarea.contact-form-text {
   resize: vertical;
-  height: 10rem; }
-
+  height: 10rem;
+}
 .contact .contact-form-btn {
   float: right;
-  margin-bottom: 1rem; }
+  margin-bottom: 1rem;
+}
 
 #confetti {
   position: fixed;
@@ -212,7 +263,8 @@ span.lang {
   left: 0;
   width: 100%;
   height: 100vh;
-  z-index: -1; }
+  z-index: -1;
+}
 
 @media only screen and (min-width: 800px) {
   .content {
@@ -221,32 +273,73 @@ span.lang {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center; }
-    .content .name {
-      position: relative;
-      padding: 0 2rem; }
-    .content .info {
-      max-width: 40ch;
-      padding: 0 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      text-align: left;
-      border-left: 3px solid var(--sec-color); }
+    align-items: center;
+  }
+  .content .name {
+    position: relative;
+    padding: 0 2rem;
+  }
+  .content .info {
+    max-width: 40ch;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: left;
+    border-left: 3px solid var(--sec-color);
+  }
   .featured img,
-  .portfolio img {
-    width: 50%; }
+.portfolio img {
+    width: 50%;
+  }
   .skills {
     margin-top: -5em;
     margin-bottom: -7em;
-    padding-top: 7em; }
+    padding-top: 7em;
+  }
   .skills-container ul {
     display: grid;
     grid-template-columns: repeat(3, auto);
-    grid-gap: 1em; }
+    grid-gap: 1em;
+  }
   .portfolio {
-    padding: 7em; } }
-
-@media only screen and (min-width: 1050px) {
+    padding: 7em;
+  }
+}
+@media only screen and (min-width: 800px) {
   .hero {
-    height: 90vh; } }
+    height: 90vh;
+  }
+}
+@media only screen and (max-width: 800px) {
+  nav {
+    background-color: var(--primary-accent-color);
+    border-bottom: 2px solid var(--sec-color);
+  }
+  .menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .menu li a {
+    display: block;
+    padding: 0.4em 0;
+  }
+  .toggle {
+    order: 1;
+    display: initial !important;
+    font-size: 1.25rem;
+  }
+  .item {
+    order: 3;
+    width: 100%;
+    display: none;
+  }
+  .active .item {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+/*# sourceMappingURL=main.css.map */

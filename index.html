@@ -14,19 +14,16 @@
 </head>
 
 <body>
-  <div class="nav-container">
-    <header>
-      <a href="/" class="logo">Nolawz</a>
-      <nav>
-        <ul>
-          <li>
-            <a class="hover-animation" href="/#certificates">Certificates</a>
-          </li>
-          <li><a class="hover-animation" href="/#contact">Contact Me</a></li>
-        </ul>
-      </nav>
-    </header>
-  </div>
+
+  <nav>
+    <ul class="menu">
+     <li class="logo"><a href="/">Nolawz</a></li>
+     <li class="item"><a class="hover-animation" href="/#certificates">Certificates</a></li>
+     <li class="item"><a class="hover-animation" href="/#contact">Contact Me</a></li>
+     <li class="item"><a class="hover-animation" href="/#languages">Languages</a></li>
+     <li class="toggle"><a></a></li>
+    </ul>
+  </nav>
 
   <div class="hero">
     <div class="content">
@@ -48,17 +45,28 @@
         <p class="role">CTF Player and Python developer</p>
         <div class="info-content">
           I am a computer enthususiast who likes to develop some fun apps in
-          python and who loves to play CTFs. I know languages like
-          <span class="lang">Python</span>,
-          <span class="lang">HTML & CSS</span>(If you count it),
-          <span class="lang">Javascript</span>,
-          <span class="lang">Java</span>,
-          <span class="lang">C/C++</span>
-          and many more...
+          python and who loves to play CTFs.
         </div>
       </div>
     </div>
   </div>
+
+  <section class="portfolio" id="languages">
+    <div class="content">
+      <div class="name">
+        <h1>Langs</h1>
+      </div>
+      <div class="info">
+        <img src="./images/icons/python.svg" alt="Python" />
+        <img src="./images/icons/javascript.svg" alt="Javascript" />
+        <img src="./images/icons/java.svg" alt="Java" />
+        <img src="./images/icons/html-5--v1.svg" alt="HTML 5" />
+        <img src="./images/icons/css3.svg" alt="CSS 3" />
+        <img src="./images/icons/c-programming.svg" alt="C" />
+        <img src="./images/icons/c-plus-plus-logo.svg" alt="C++" />
+      </div>
+    </div>
+  </section>
 
   <section class="portfolio" id="certificates">
     <cert src="./images/certs/ehacon.jpg" name="Ehacon CTF"></cert>
@@ -66,6 +74,7 @@
     <cert src="./images/certs/damncon.png" name="Damncon CTF"></cert>
     <cert src="./images/certs/inctf_jr-2021.jpg" name="InCTF JR"></cert>
   </section>
+
 
   <div class="contact" id="contact">
     <h1>Contact Me</h1>
@@ -82,6 +91,7 @@
   </div>
 </body>
 <script type="text/javascript" src="./js/template.js"></script>
+<script type="text/javascript" src="./js/navbar.js"></script>
 <!-- lightbox -->
 <script src="./lightbox/dist/js/lightbox-plus-jquery.min.js"></script>
 

@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap");
 
+@font-face {
+  font-family: "Fira Code";
+  src: url("../fonts/Fira Code Regular Nerd Font Complete.ttf");
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -33,7 +38,6 @@ body {
   height: 100vh;
   margin: 0;
   font-family: "Poppins", Arial, Helvetica, sans-serif;
-
   background-color: var(--primary-color);
   color: var(--text-color);
 }
@@ -72,31 +76,27 @@ img {
   width: 100%;
 }
 
-.nav-container {
+nav {
   background-color: var(--primary-color);
+  /* margin: 1.25rem 0; */
+  padding: 1.25em 1em;
 
   a {
     color: #ffffff;
+    float: right;
+    margin: 0 1em;
   }
-}
 
-header {
-  display: flex;
-  justify-content: space-between;
-  padding: 1.25em;
-
-  .logo {
+  .logo a {
+    float: left;
     color: var(--sec-color);
     font-weight: bold;
   }
 
-  ul {
-    display: flex;
-
-    a {
-      display: block;
-      margin: 0 1em;
-    }
+  .toggle {
+    display: none;
+    cursor: pointer;
+    font-family: "Fira Code";
   }
 }
 
@@ -207,6 +207,23 @@ span.lang {
   padding: 0 0.3125rem;
   font-weight: 500;
   line-height: 1.8;
+}
+
+#languages {
+  h1 {
+    font-size: 4rem;
+  }
+
+  .info {
+    display: initial;
+    text-align: center;
+  }
+
+  img {
+    width: 7.5rem;
+    box-shadow: none;
+    border: none;
+  }
 }
 
 .btn {
@@ -322,8 +339,44 @@ span.lang {
   }
 }
 
-@media only screen and (min-width: 1050px) {
+@media only screen and (min-width: 800px) {
   .hero {
     height: 90vh;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  nav {
+    background-color: var(--primary-accent-color);
+    border-bottom: 2px solid var(--sec-color);
+  }
+
+  .menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .menu li a {
+    display: block;
+    padding: 0.4em 0;
+  }
+
+  .toggle {
+    order: 1;
+    display: initial !important;
+    font-size: 1.25rem;
+  }
+
+  .item {
+    order: 3;
+    width: 100%;
+    display: none;
+  }
+
+  .active .item {
+    display: flex;
+    justify-content: center;
   }
 }
