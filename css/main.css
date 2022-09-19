@@ -98,9 +98,13 @@ nav {
   background-color: var(--primary-color);
   padding: 1.25em 1em;
 }
+nav .nav-items {
+  float: right;
+  display: flex;
+  flex-direction: row;
+}
 nav a {
   color: #ffffff;
-  float: right;
   margin: 0 1em;
 }
 nav .logo a {
@@ -342,6 +346,9 @@ span.lang {
   nav {
     background-color: var(--primary-accent-color);
     border-bottom: 2px solid var(--sec-color);
+  }
+  .nav-items {
+    display: contents !important;
   }
   .menu {
     display: flex;
