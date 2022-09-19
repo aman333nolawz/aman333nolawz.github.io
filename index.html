@@ -36,12 +36,12 @@
       <div class="name">
         <h1>Nolawz</h1>
         <div class="social-icons">
-          <a href="http://github.com/aman333nolawz" target="_blank" rel="noopener noreferrer">
-            <img src="https://img.icons8.com/material-sharp/50/ff79c6/github.png" alt="Github" title="Github" />
+          <a href="https://github.com/aman333nolawz" target="_blank" rel="noopener noreferrer">
+            <img src="./images/icons/github.png" alt="Github" title="Github" />
           </a>
 
           <a href="https://aman333nolawz.github.io/My-Writeups/" target="_blank" rel="noopener noreferrer">
-            <img src="https://img.icons8.com/material-sharp/50/ff79c6/internet.png" alt="Writeups"
+            <img src="./images/icons/internet.png" alt="Writeups"
               title="My Writeups" />
           </a>
         </div>
@@ -63,13 +63,13 @@
         <h1>Langs</h1>
       </div>
       <div class="info">
-        <img src="./images/icons/python.svg" alt="Python" />
-        <img src="./images/icons/javascript.svg" alt="Javascript" />
-        <img src="./images/icons/java.svg" alt="Java" />
-        <img src="./images/icons/html-5--v1.svg" alt="HTML 5" />
-        <img src="./images/icons/css3.svg" alt="CSS 3" />
-        <img src="./images/icons/c-programming.svg" alt="C" />
-        <img src="./images/icons/c-plus-plus-logo.svg" alt="C++" />
+        <img src="./images/icons/python.svg" alt="Python" title="Python" />
+        <img src="./images/icons/javascript.svg" alt="Javascript" title="Javascript" />
+        <img src="./images/icons/java.svg" alt="Java" title="Java" />
+        <img src="./images/icons/html-5--v1.svg" alt="HTML 5" title="HTML 5" />
+        <img src="./images/icons/css3.svg" alt="CSS 3" title="CSS 3" />
+        <img src="./images/icons/c-programming.svg" alt="C" title="C" />
+        <img src="./images/icons/c-plus-plus-logo.svg" alt="C++" title="C++" />
       </div>
     </div>
   </section>
@@ -85,10 +85,14 @@
   <div class="contact hidden" id="contact">
     <h1>Contact Me</h1>
     <form action="https://formsubmit.co/nolawz46@gmail.com" method="POST" class="contact-form">
-      <input type="text" name="name" class="contact-form-text" placeholder="Your name" required />
-      <input type="email" name="email" class="contact-form-text" placeholder="Your email" required />
-      <input type="tel" name="phone" class="contact-form-text" placeholder="Your phone" required />
-      <textarea class="contact-form-text" placeholder="Your message" name="message" required></textarea>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" class="contact-form-text" placeholder="Your name" required />
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" class="contact-form-text" placeholder="Your email" required />
+      <label for="phone">Phone:</label>
+      <input type="tel" id="phone" name="phone" class="contact-form-text" placeholder="Your phone" required />
+      <label for="message">Message:</label>
+      <textarea id="message" class="contact-form-text" placeholder="Your message" name="message" required></textarea>
 
       <input type="hidden" name="_next" value="http://aman333nolawz.github.io/pages/thanks.html" />
       <input type="hidden" name="_template" value="table" />
