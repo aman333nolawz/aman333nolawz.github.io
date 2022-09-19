@@ -54,6 +54,15 @@ a {
   text-decoration: none;
 }
 
+.hidden {
+  opacity: 0;
+  transition: all 1s;
+}
+
+.show {
+  opacity: 1;
+}
+
 .hover-animation::after {
   content: "";
   position: absolute;
@@ -378,5 +387,11 @@ span.lang {
   .active .item {
     display: flex;
     justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion) {
+  .hidden {
+    transition: none;
   }
 }
