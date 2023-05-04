@@ -13,12 +13,13 @@ sudo pacman -S --noconfirm xorg xorg-server xorg-xinit xorg-xkill xorg-xsetroot 
   pipewire pipewire-alsa pipewire-pulse pipewire-audio alsa-utils \
   dunst jq aria2 networkmanager network-manager-applet mpd mpc lf \
   xdg-user-dirs cronie deluge deluge-gtk firefox github-cli \
-  bluez bluez-utils yt-dlp
+  bluez bluez-utils yt-dlp bat-extras
 
-sudo systemctl enable NetworkManager
+sudo systemctl enable NetworkManager --now
 sudo systemctl enable sddm
-systemctl --user enable mpd
-systemctl --user enable deluged
+systemctl --user enable mpd --now
+systemctl --user enable redshift --now
+systemctl --user enable deluged --now
 
 read -r -d '' suspendFileContent << EOM
 [Unit]
