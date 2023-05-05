@@ -56,11 +56,6 @@ EOM
 
 echo "$touchpadFileContent" | sudo tee /etc/X11/xorg.conf.d/30-touchpad.conf
 
-cd $HOME
-git clone --bare --depth=1 https://github.com/aman333nolawz/dotfiles.git .dotfiles
-alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-config config --local status.showUntrackedFiles no
-
 # paru: AUR helper
 sudo pacman -S --needed base-devel
 git clone https://aur.archlinux.org/paru.git
@@ -69,3 +64,37 @@ makepkg -si
 
 paru -S --noconfirm i3lock-color ksuperkey ctpv-git gomp-git \
   networkmanager-dmenu-git pfetch protonvpn
+
+# Changing grub theme
+tput setaf 4 && echo "[.] Changing Grub theme..."
+sudo mkdir -p /boot/grub/themes
+sudo git clone https://github.com/aman333nolawz/grub-theme /boot/grub/themes/virtuaverse
+sudo rm -rf /boot/grub/themes/virtuaverse/.git
+sudo awk -i inplace '/GRUB_THEME=/ {gsub(/"[^"]+"/, "\"/boot/grub/themes/virtuaverse/theme.txt\"")} 1' /etc/default/grub
+sudo grub-mkconfig -o /boot/grub/grub.cfg
+tput setaf 2 && echo "[+] Grub theme set!"
+
+# Changing SDDM theme
+tput setaf 4 && echo "[.] Changing SDDM theme..."
+sudo mkdir -p /usr/share/sddm/themes/
+sudo git clone https://github.com/aman333nolawz/sddm-sugar-candy /usr/share/sddm/themes/sugar-candy
+sudo rm -rf /usr/share/sddm/themes/sugar-candy/.git/
+sudo cp /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf
+sudo sed -i "s/Current=.*/Current=sugar-candy/" /etc/sddm.conf
+tput setaf 2 && echo "[+] SDDM theme set!"
+
+# Dotfiles
+tput setaf 4 && echo "[.] Cloning dotfiles..."
+cd $HOME
+git clone --bare --depth=1 https://github.com/aman333nolawz/dotfiles.git .dotfiles
+alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+config config --local status.showUntrackedFiles no
+rm -rf .config
+config checkout || exit
+tput setaf 2 && echo "[+] Dotfiles are all ready!"
+
+tput setaf 4 && echo "[.] Setting up fonts"
+cd $HOME
+sudo mkdir -p /usr/local/share/fonts/nerd-fonts/
+sudo cp ".local/share/fonts/nerd-fonts/Fira Code Regular Nerd Font Complete.ttf" /usr/local/share/fonts/nerd-fonts/
+tput setaf 2 && echo "[+] Fonts are ready to used!"
