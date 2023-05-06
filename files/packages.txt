@@ -76,6 +76,8 @@ wireshark-qt
 xcolor
 xdg-user-dirs
 xf86-video-intel
+xf86-video-amdgpu
+xf86-video-qxl
 xorg-bdftopcf
 xorg-docs
 xorg-font-util
