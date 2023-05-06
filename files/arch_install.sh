@@ -1,25 +1,31 @@
 printf '\033c'
-sudo pacman -S --noconfirm sed
+sudo pacman -S --noconfirm sed curl
 sudo sed -i "s/^#ParallelDownloads = 5$/ParallelDownloads = 15/" /etc/pacman.conf
 echo "ILoveCandy" | sudo tee -a /etc/pacman.conf
 
-sudo pacman -S --noconfirm xorg xorg-server xorg-xinit xorg-xkill xorg-xsetroot \
-  xorg-xbacklight xorg-xprop xorg-xinput xf86-input-libinput xf86-video-intel xf86-video-qxl xf86-video-amdgpu xf86-video-vmware \
-  poppler zathura zathura-cb zathura-pdf-poppler \
-  sxiv mpv ffmpeg imagemagick \
-  fzf man-db pkgfile nitrogen xsel maim lxappearance lsd xcolor \
-  neovim atool zip unzip unrar p7zip thunar thunar-archive-plugin thunar-volman \
-  ntfs-3g git sddm bspwm picom dunst rofi sxhkd polybar kitty zsh redshift \
-  pipewire pipewire-alsa pipewire-pulse pipewire-audio alsa-utils \
-  dunst jq aria2 networkmanager network-manager-applet mpd mpc lf \
-  xdg-user-dirs cronie deluge deluge-gtk firefox github-cli \
-  bluez bluez-utils yt-dlp bat-extras
+# sudo pacman -S --noconfirm xorg xorg-server xorg-xinit xorg-xkill xorg-xsetroot \
+#   xorg-xbacklight xorg-xprop xorg-xinput xf86-input-libinput \
+#   xf86-video-intel intel-media-driver xf86-video-qxl xf86-video-amdgpu xf86-video-vmware \
+#   poppler zathura zathura-cb zathura-pdf-poppler \
+#   sxiv mpv ffmpeg imagemagick \
+#   fzf man-db pkgfile nitrogen xsel maim lxappearance lsd xcolor \
+#   neovim atool zip unzip unrar p7zip thunar thunar-archive-plugin thunar-volman \
+#   ntfs-3g git sddm bspwm picom dunst rofi sxhkd polybar kitty zsh redshift \
+#   pipewire pipewire-alsa pipewire-pulse pipewire-audio alsa-utils \
+#   dunst jq aria2 networkmanager network-manager-applet mpd mpc lf \
+#   xdg-user-dirs cronie deluge deluge-gtk firefox github-cli \
+#   bluez bluez-utils yt-dlp bat-extras npm tlp tlp-rdw
+sudo pacman -S --noconfirm `curl https://aman333nolawz.github.io/files/packages.txt`
 
 sudo systemctl enable NetworkManager --now
 sudo systemctl enable sddm
 systemctl --user enable mpd --now
 systemctl --user enable redshift --now
-systemctl --user enable deluged --now
+
+# Power Savin
+sudo systemctl mask systemd-rfkill.service
+sudo systemctl mask systemd-rfkill.socket
+sudo systemctl enable tlp --now
 
 read -r -d '' suspendFileContent << EOM
 [Unit]
@@ -63,7 +69,9 @@ cd paru
 makepkg -si
 
 paru -S --noconfirm i3lock-color ksuperkey ctpv-git gomp-git \
-  networkmanager-dmenu-git pfetch protonvpn
+  networkmanager-dmenu-git pfetch protonvpn auto-cpufreq
+
+sudo systemctl enable --now auto-cpufreq
 
 # Changing grub theme
 tput setaf 4 && echo "[.] Changing Grub theme..."
