@@ -21,7 +21,6 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   site: 'https://aman333nolawz.github.io',
-  base: 'random-repo-name-for-writeup',
   integrations: [
     expressiveCode({
       themes: ['github-light', 'github-dark'],
