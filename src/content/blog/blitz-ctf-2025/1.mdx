@@ -1,0 +1,65 @@
+---
+title: 'Unstoppable force meets immovable object'
+description: 'Writeup for the challenge "Unstoppable force meets immovable object" made by me in Blitz CTF 2025'
+date: 2025-07-07
+tags: ['ctf', 'blitz-ctf', 'web']
+authors: ['nolawz']
+---
+
+# Unstoppable force meets immovable object
+
+import Challenge from '@/components/custom/Challenge.astro'
+
+<Challenge
+  title="Unstoppable force meets immovable object"
+  authors={['Nolawz']}
+  category="Web"
+  points={50}
+  solves={180}
+  files={["Unstoppable_force_meets_immovable_object.zip"]}
+  flag="blitz{60nn4_b3_4_b16_c0ll1510n_wh3n_un570pp4bl3_f0rc3_m3375_1mm0v4bl3_0bj3c7}"
+>
+What is gonna happen when an unstoppable force meets some immovable objects?
+
+https://ufmio-n1sj9nsb.blitzhack.xyz/
+</Challenge>
+
+This is one of the easiest challenge in this CTF. The objective of this challenge was for you to find the collision for a custom hash function which was implemented as follows:
+```python
+def immovable_object(data, block_size=32):
+    if len(data) % block_size != 0:
+        data += b"\0" * (block_size - (len(data) % block_size))
+
+    h = 0
+    for i in range(0, len(data), block_size):
+        block = int.from_bytes(data[i : i + block_size], "big")
+        h ^= block
+
+    return h
+```
+
+We can see that it pads the data with null byte to make it divisible by block size (32). And then it iterates over the data and xor's the block with the previous hash.
+So it is very easy to find a collision for any string using this function.
+
+For simplicity's sake, I am gonna consider the hash function as `h(x)`.
+
+Say we want to find a block `A'` (ie, a string of size 32) such that `h(A') = h(A)` (here, `A` is also a block) but `A' != A`. To find this, we can use a clever property of xor to easily construct the collision.
+When we xor a number with itsef, we will get `0` as the result. Therefore, `x ^ x ^ x = x` for any number. Just like that, `A ^ A ^ A = A`.
+Thus, we have found the `A'` to be `A' = A + A + A`. Thus when the hash function is used, `h(A') = h(A)`.
+
+The only other thing to note here is that you have to pad `P@ssword@123` to make it 32 bytes long.
+
+Here is the solution script:
+```python title="solve.py"
+import requests
+
+password = "P@ssword@123"
+password += "\x00" * (32 - len(password))
+password *= 3
+
+r = requests.post(
+    "https://ufmio-n1sj9nsb.blitzhack.xyz/",
+    data={"username": "admin", "password": password},
+)
+print(r.text)
+```

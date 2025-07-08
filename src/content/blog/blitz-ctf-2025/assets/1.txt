@@ -1,0 +1,74 @@
+__int64 __fastcall main(int a1, char **a2, char **a3)
+{
+  unsigned int seed; // eax
+  int v4; // eax
+  char v6; // [rsp+17h] [rbp-839h]
+  int v7; // [rsp+18h] [rbp-838h]
+  int v8; // [rsp+1Ch] [rbp-834h]
+  int v9; // [rsp+1Ch] [rbp-834h]
+  int i; // [rsp+20h] [rbp-830h]
+  int j; // [rsp+24h] [rbp-82Ch]
+  int k; // [rsp+28h] [rbp-828h]
+  FILE *stream; // [rsp+30h] [rbp-820h]
+  FILE *stream_1; // [rsp+38h] [rbp-818h]
+  int buf[514]; // [rsp+40h] [rbp-810h] BYREF
+  unsigned __int64 v16; // [rsp+848h] [rbp-8h]
+
+  v16 = __readfsqword(0x28u);
+  memset(buf, 0, 0x400uLL);
+  buf[0] = 66;
+  buf[1] = 108;
+  buf[2] = 105;
+  buf[3] = 116;
+  buf[4] = 122;
+  buf[5] = 123;
+  buf[6] = 102;
+  buf[7] = 97;
+  buf[8] = 107;
+  buf[9] = 101;
+  buf[10] = 95;
+  buf[11] = 102;
+  buf[12] = 108;
+  buf[13] = 97;
+  buf[14] = 103;
+  buf[15] = 125;
+  stream = fopen("flag.txt.enc", "w");
+  for ( i = 0; i <= 15; ++i )
+  {
+    buf[i + 256] = buf[i] ^ 0x255;
+    fputc(buf[i + 256], stream);
+  }
+  seed = time(0LL);
+  srand(seed);
+  for ( j = 0; j <= 255; ++j )
+  {
+    buf[j] = j;
+    v4 = rand();
+    buf[j + 256] = (unsigned __int8)(((unsigned int)(v4 >> 31) >> 24) + v4) - ((unsigned int)(v4 >> 31) >> 24);
+  }
+  v8 = 0;
+  for ( k = 0; k <= 255; ++k )
+  {
+    v8 = (buf[k + 256] + v8 + buf[k]) % 256;
+    buf[k] ^= buf[v8];
+    buf[v8] ^= buf[k];
+    buf[k] ^= buf[v8];
+  }
+  v7 = 0;
+  v9 = 0;
+  stream_1 = fopen("flag.txt", "r");
+  fseek(stream, 0LL, 0);
+  while ( 1 )
+  {
+    v6 = fgetc(stream_1);
+    if ( v6 == -1 )
+      break;
+    v7 = (v7 + 1) % 256;
+    v9 = (v9 + buf[v7]) % 256;
+    buf[v7] ^= buf[v9];
+    buf[v9] ^= buf[v7];
+    buf[v7] ^= buf[v9];
+    fputc(buf[(buf[v9] + buf[v7]) % 256] ^ v6, stream);
+  }
+  return 0LL;
+}

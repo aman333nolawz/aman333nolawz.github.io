@@ -1,0 +1,113 @@
+---
+title: 'Unstoppable force meets immovable object 2'
+description: 'Writeup for the challenge "Unstoppable force meets immovable object 2" made by me in Blitz CTF 2025'
+date: 2025-07-07
+tags: ['ctf', 'blitz-ctf', 'web']
+authors: ['nolawz']
+---
+
+# Unstoppable force meets immovable object 2
+
+import Challenge from '@/components/custom/Challenge.astro'
+
+<Challenge
+  title="Unstoppable force meets immovable object 2"
+  authors={['Nolawz']}
+  category="Web"
+  points={159}
+  solves={62}
+  files={["UFMIO2.zip"]}
+  flag="Blitz{b1r7hd4y_p4r4d0x_3475_5h177y_h45h35_l1k3_7h15}"
+>
+Just because I was in a happy mood to give an easy challenge due to my birthday doesn't mean I can't increase its difficulty.
+
+http://ufmiotwo-asdhwsad.blitzhack.xyz/
+</Challenge>
+
+This challenge used another custom hash instead of the simple one in the first challenge. Although the algorithm for it might seem complicated, there is one thing that we can exploit about it.
+The output produced by this hash function only 40 bits long. Therefore, we can exploit this using [Birthdy Attack](https://en.wikipedia.org/wiki/Birthday_attack).
+So a collision can probably be found within `sqrt(2^40) = 1048576` tries which is a reasonable amount of tries to brute force.
+
+Here is the solution script for this challenge:
+```python title="solve.py"
+import random
+import string
+import requests
+
+
+def complex_custom_hash(data_string):
+    data_bytes = data_string.encode("utf-8")
+
+    P = 2**61 - 1
+    B = 101
+
+    hash_val = 0
+
+    for byte_val in data_bytes:
+        hash_val = (hash_val * B + byte_val) % P
+
+    length_mix = (len(data_bytes) * 123456789) % P
+    hash_val = (hash_val + length_mix) % P
+
+    chunk_size = 40
+    num_chunks = 64 // chunk_size
+
+    folded_hash = 0
+    temp_hash = hash_val
+
+    for _ in range(num_chunks):
+        chunk = temp_hash & ((1 << chunk_size) - 1)
+        folded_hash = (folded_hash + chunk) % (1 << chunk_size)
+        temp_hash >>= chunk_size
+
+    final_small_hash = folded_hash
+
+    scrambled_hash = 0
+    for _ in range(3):
+        scrambled_hash = (
+            final_small_hash ^ (final_small_hash >> 7) ^ (final_small_hash << 3)
+        ) & ((1 << chunk_size) - 1)
+        final_small_hash = scrambled_hash
+
+    return f"{scrambled_hash:04x}"
+
+
+def generate_random_string(min_len=10, max_len=50):
+    length = random.randint(min_len, max_len)
+    characters = (
+        string.ascii_letters + string.digits + string.punctuation + string.whitespace
+    )
+    return "".join(random.choices(characters, k=length))
+
+
+def find_collision(hash_function, max_attempts=2000000):
+    found_hashes = {}
+    attempts = 0
+
+    while attempts < max_attempts:
+        attempts += 1
+        print(f"{attempts}/{max_attempts}")
+        input_string = generate_random_string()
+        current_hash = hash_function(input_string)
+
+        if current_hash in found_hashes:
+            colliding_input = found_hashes[current_hash]
+            if colliding_input != input_string:
+                print(f"[!!!] Collision found after {attempts} attempts!")
+                print(f"Input 1: {colliding_input.encode()}")
+                print(f"Input 2: {input_string.encode()}")
+                print(f"Both hash to: {current_hash}")
+                return input_string, colliding_input
+
+        found_hashes[current_hash] = input_string
+
+    print(f"Search completed. No collision found within {max_attempts} attempts.")
+    return None, None
+
+
+url = "http://ufmiotwo-asdhwsad.blitzhack.xyz/"
+username, password = find_collision(complex_custom_hash)
+
+r = requests.post(url, data={"username": username, "password": password})
+print(r.text)
+```
