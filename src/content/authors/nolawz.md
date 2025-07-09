@@ -2,7 +2,7 @@
 name: 'B34RN00B'
 pronouns: 'he/him'
 avatar: 'https://avatars.githubusercontent.com/u/219129153'
-bio: 'JUST A HECKER BEAR'
+bio: 'hecker'
 website: 'b34rn00b.xyz'
 twitter: 'https://x.com/ElectroTec32409'
 github: 'https://github.com/b34rn008'
