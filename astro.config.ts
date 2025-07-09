@@ -20,7 +20,7 @@ import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  site: 'https://D0s4.github.io',
+  site: 'https://b34rn008.github.io',
   integrations: [
     expressiveCode({
       themes: ['github-light', 'github-dark'],
