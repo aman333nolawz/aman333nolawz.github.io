@@ -1,11 +1,11 @@
 import type { IconMap, SocialLink, Site } from '@/types'
 
 export const SITE: Site = {
-  title: 'Nolawz',
+  title: 'B34RN00B',
   description:
     'Why obey law when you can write it yourself?',
-  href: 'https://aman333nolawz.github.io',
-  author: 'Nolawz',
+  href: 'https://b34rn008.github.io',
+  author: 'B34RN00B',
   locale: 'en-US',
   featuredPostCount: 2,
   postsPerPage: 5,
@@ -28,15 +28,15 @@ export const NAV_LINKS: SocialLink[] = [
 
 export const SOCIAL_LINKS: SocialLink[] = [
   {
-    href: 'https://github.com/aman333nolawz',
+    href: 'https://github.com/b34rn008',
     label: 'GitHub',
   },
   {
-    href: 'https://twitter.com/NoLawz333',
+    href: 'https://x.com/ElectroTec32409',
     label: 'Twitter',
   },
   {
-    href: 'mailto:nolawz46@gmail.com',
+    href: 'mailto:b34r@blitzhack.xyz',
     label: 'Email',
   },
   {
