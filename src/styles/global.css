@@ -92,3 +92,7 @@
     @apply border-border outline-ring/50 tracking-tight;
   }
 }
+
+figcaption {
+  @apply text-sm text-muted-foreground text-center;
+}

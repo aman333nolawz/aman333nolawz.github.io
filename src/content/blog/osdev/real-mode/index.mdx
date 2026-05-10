@@ -1,0 +1,28 @@
+---
+title: 'What is real mode?'
+description: 'A quick introduction to real mode, the mode x86 processors start in and how to get out of it.'
+date: 2025-05-11
+tags: ['osdev', 'assembly', 'low-level']
+authors: ['nolawz']
+---
+
+# What actually is real mode?
+
+Real mode is the default operating mode of x86 CPUs immediately after boot.
+
+It exists mainly for backward compatibility with extremely old software written for the original x86 processors. In this mode, the CPU behaves similarly to the old Intel 8086.
+
+That means:
+- Only 16-bit registers are directly accessible
+- Memory access is heavily restricted
+- There is no memory protection
+- Advanced CPU features are unavailable
+- Only around 1 MB of RAM can be addressed
+
+# Why Do Modern CPUs Still Use It?
+Mostly because of compatibility.
+
+A huge amount of old software depended on the original x86 boot behavior. Completely removing real mode would break decades of assumptions about how PCs start up.
+
+So modern x86 CPUs still begin in real mode before the operating system switches into something more modern like protected mode
+

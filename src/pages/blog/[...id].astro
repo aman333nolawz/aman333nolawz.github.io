@@ -210,11 +210,11 @@ const tocSections = await getTOCSections(currentPostId)
         </div>
       </div>
 
-      <PostNavigation
-        newerPost={navigation.newer}
-        olderPost={navigation.older}
-        parentPost={isCurrentSubpost ? navigation.parent : undefined}
-      />
+      <!-- <PostNavigation -->
+      <!--   newerPost={navigation.newer} -->
+      <!--   olderPost={navigation.older} -->
+      <!--   parentPost={isCurrentSubpost ? navigation.parent : undefined} -->
+      <!-- /> -->
     </section>
 
     {
@@ -223,7 +223,7 @@ const tocSections = await getTOCSections(currentPostId)
       )
     }
 
-    <article class="prose col-start-2 max-w-none">
+    <article class="prose col-start-2 max-w-none h-full">
       <Content />
     </article>
 
@@ -238,11 +238,12 @@ const tocSections = await getTOCSections(currentPostId)
       )
     }
 
-    <PostNavigation
-      newerPost={navigation.newer}
-      olderPost={navigation.older}
-      parentPost={isCurrentSubpost ? navigation.parent : undefined}
-    />
+      <PostNavigation
+        newerPost={navigation.newer}
+        olderPost={navigation.older}
+        parentPost={isCurrentSubpost ? navigation.parent : undefined}
+      />
+
   </section>
 
   <Button

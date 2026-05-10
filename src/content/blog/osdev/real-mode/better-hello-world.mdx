@@ -1,0 +1,63 @@
+---
+title: 'Better Hello world!'
+description: "Making out bootloader by setting up segment registers and changing program's origin"
+date: 2025-05-11
+tags: ['osdev', 'assembly', 'low-level']
+authors: ['nolawz']
+---
+
+# Segmentation and Stack Setup
+
+We are going to make our bootloader better by setting up segment registers and changing program's origin. This will make it work on different machines and also make it more robust.
+
+So before we change `SS` (Stack Segment) and `SP` (Stack Pointer), we need to disable interrupts. This is because if an interrupt occurs while we are changing the stack, stack will be in an inconsistent state and it can cause problems. We can disable interrupts using `cli` instruction.
+And after we are done with changing stack, we can enable interrupts again using `sti` instruction.
+
+So here is the updated code for our bootloader:
+
+```asm title=boot.asm {1,4-12}
+ORG 0x0
+BITS 16
+
+start:
+  cli             ; Clear interrupts
+  mov ax, 0x7C0   ; We cannot set value for segment registers directly, we need to load it in ax first
+  mov ds, ax      ; Set DS to the same segment as the bootloader
+  mov es, ax      ; Set ES to the same segment as the bootloader
+  mov ax, 0
+  mov ss, ax      ; Set stack segment to 0
+  mov sp, 0x7C00  ; Set stack pointer to the end of the bootloader
+  sti             ; Enable interrupts
+  
+  mov si, message
+  call print
+  jmp $
+
+print:
+  lodsb
+  cmp al, 0
+  je .done
+  call print_char
+  jmp print
+.done:
+  ret
+
+print_char:
+  mov ah, 0eh
+  int 0x10
+  ret
+
+message: db "Hello, World!", 0
+
+TIMES 510-($-$$) db 0
+DW 0xAA55
+```
+
+After setting `DS` and `ES` to `0x7C0`, addresses are interpreted relative to segment `0x7C0`. So:
+$$
+\begin{aligned}
+\texttt{physical address} &= \texttt{segment} \times 16 + \texttt{offset} \\
+                 &= \texttt{0x7C0} \times 16 + 0 \\
+                 &= \texttt{0x7C00}
+\end{aligned}
+$$

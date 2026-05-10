@@ -1,0 +1,37 @@
+---
+title: 'Segmentation Memory Model'
+description: 'An introduction to the segmentation memory model used in x86 protected mode, how it works, and how to set it up.'
+date: 2025-05-11
+tags: ['osdev', 'assembly', 'low-level']
+authors: ['nolawz']
+---
+
+# Intro
+
+Memory access in real mode is done using something called segmentation.
+
+The original 8086 processor used mostly 16-bit registers. But a 16-bit register can only represent
+$2^{16} = 65536 \text{ bytes} = 64 \text{ KB}$. So theoretically, the CPU should only have been only be able to access 64 KB of memory instead of 1 MB.
+
+As a solution to this, segmentation was introduced. Instead of using a single address, memory locations were accessed using `segment:offset`
+
+# 8086 Segment Registers
+The 8086 introduced several special segment registers:
+  1. **CS** (Code Segment)
+  2. **SS** (Stack Segment)
+  3. **DS** (Data Segment)
+  4. **ES** (Extra Segment)
+
+# Calculating Physical Addresses
+
+In real mode, the CPU converts a `segment:offset` pair into an actual physical memory address using this formula:
+$$\texttt{physical address}=(\texttt{segment} \times 16)+\texttt{offset}$$
+
+**For example, suppose:**
+```text showLineNumbers=false
+Code Segment = 0x7c0
+Offset       = 0x0
+```
+Then the physical address becomes:
+$$\texttt{0x7c0} \times \texttt{0x10} + \texttt{0x0} = \texttt{0x7c00}$$
+
