@@ -94,5 +94,5 @@
 }
 
 figcaption {
-  @apply text-sm text-muted-foreground text-center;
+  @apply text-muted-foreground text-center text-sm;
 }

@@ -2,8 +2,7 @@ import type { IconMap, SocialLink, Site } from '@/types'
 
 export const SITE: Site = {
   title: 'Nolawz',
-  description:
-    'Why obey law when you can write it yourself?',
+  description: 'Why obey law when you can write it yourself?',
   href: 'https://aman333nolawz.github.io',
   author: 'Nolawz',
   locale: 'en-US',

@@ -193,7 +193,7 @@ const tocSections = await getTOCSections(currentPostId)
             )
           }
         </div>
-        <div class="flex flex-wrap justify-center gap-2">
+        <div class="flex flex-wrap justify-center gap-2" id="post-tags">
           {
             post.data.tags &&
               post.data.tags.length > 0 &&
@@ -201,6 +201,7 @@ const tocSections = await getTOCSections(currentPostId)
                 <a
                   href={`/tags/${tag}`}
                   class={badgeVariants({ variant: 'secondary' })}
+                  data-tag={tag}
                 >
                   <Icon name="lucide:hash" class="size-3" />
                   {tag}
@@ -223,7 +224,7 @@ const tocSections = await getTOCSections(currentPostId)
       )
     }
 
-    <article class="prose col-start-2 max-w-none h-full">
+    <article class="prose col-start-2 h-full max-w-none">
       <Content />
     </article>
 
@@ -238,12 +239,11 @@ const tocSections = await getTOCSections(currentPostId)
       )
     }
 
-      <PostNavigation
-        newerPost={navigation.newer}
-        olderPost={navigation.older}
-        parentPost={isCurrentSubpost ? navigation.parent : undefined}
-      />
-
+    <PostNavigation
+      newerPost={navigation.newer}
+      olderPost={navigation.older}
+      parentPost={isCurrentSubpost ? navigation.parent : undefined}
+    />
   </section>
 
   <Button
@@ -280,6 +280,17 @@ const tocSections = await getTOCSections(currentPostId)
           )
         })
       }
+
+      document
+        .querySelectorAll<HTMLAnchorElement>('#post-tags a[data-tag]')
+        .forEach((tagLink) => {
+          tagLink.removeEventListener('click', handleTagClick)
+          tagLink.addEventListener('click', handleTagClick)
+        })
     })
+
+    function handleTagClick(this: HTMLAnchorElement) {
+      window.posthog?.capture('tag_clicked', { tag: this.dataset.tag })
+    }
   </script>
 </Layout>

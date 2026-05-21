@@ -20,6 +20,8 @@ const { project } = Astro.props
     href={project.data.link}
     class="flex flex-col gap-4 sm:flex-row"
     external
+    data-project-name={project.data.name}
+    data-project-link={project.data.link}
   >
     {
       project.data.image && (
@@ -68,3 +70,23 @@ const { project } = Astro.props
     </div>
   </Link>
 </div>
+
+<script>
+  function setupProjectCardTracking() {
+    document
+      .querySelectorAll<HTMLAnchorElement>('a[data-project-name]')
+      .forEach((link) => {
+        link.removeEventListener('click', handleProjectCardClick)
+        link.addEventListener('click', handleProjectCardClick)
+      })
+  }
+
+  function handleProjectCardClick(this: HTMLAnchorElement) {
+    window.posthog?.capture('project_link_clicked', {
+      project_name: this.dataset.projectName,
+      project_link: this.dataset.projectLink,
+    })
+  }
+
+  document.addEventListener('astro:page-load', setupProjectCardTracking)
+</script>

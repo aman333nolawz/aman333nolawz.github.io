@@ -58,6 +58,8 @@ import { Icon } from 'astro-icon/components'
     })
 
     localStorage.setItem('theme', newTheme)
+
+    window.posthog?.capture('theme_toggled', { theme: newTheme })
   }
 
   function initThemeToggle() {

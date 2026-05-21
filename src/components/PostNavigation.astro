@@ -22,6 +22,8 @@ const isSubpost = !!parentPost
       !olderPost && 'pointer-events-none opacity-50 cursor-not-allowed',
     )}
     aria-disabled={!olderPost}
+    data-nav-direction="previous"
+    data-nav-post-title={olderPost?.data.title}
   >
     <Icon
       name="lucide:arrow-left"
@@ -49,6 +51,8 @@ const isSubpost = !!parentPost
           'group flex size-full items-center justify-center rounded-lg',
           !parentPost && 'pointer-events-none cursor-not-allowed opacity-50',
         )}
+        data-nav-direction="parent"
+        data-nav-post-title={parentPost?.data.title}
       >
         <Icon
           name="lucide:corner-left-up"
@@ -74,6 +78,8 @@ const isSubpost = !!parentPost
       !newerPost && 'pointer-events-none opacity-50 cursor-not-allowed',
     )}
     aria-disabled={!newerPost}
+    data-nav-direction="next"
+    data-nav-post-title={newerPost?.data.title}
   >
     <div class="flex flex-col items-end overflow-hidden text-wrap">
       <span class="text-muted-foreground text-right text-xs">
@@ -92,3 +98,24 @@ const isSubpost = !!parentPost
     />
   </Link>
 </nav>
+
+<script>
+  function setupPostNavTracking() {
+    document
+      .querySelectorAll<HTMLAnchorElement>('a[data-nav-direction]')
+      .forEach((link) => {
+        link.removeEventListener('click', handlePostNavClick)
+        link.addEventListener('click', handlePostNavClick)
+      })
+  }
+
+  function handlePostNavClick(this: HTMLAnchorElement) {
+    if (!this.dataset.navPostTitle) return
+    window.posthog?.capture('post_navigation_clicked', {
+      direction: this.dataset.navDirection,
+      post_title: this.dataset.navPostTitle,
+    })
+  }
+
+  document.addEventListener('astro:page-load', setupPostNavTracking)
+</script>

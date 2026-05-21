@@ -41,6 +41,7 @@ const blog = await getRecentPosts(SITE.featuredPostCount)
     <div class="flex justify-center">
       <Link
         href="/blog"
+        id="see-all-posts"
         class={buttonVariants({ variant: 'ghost' }) + ' group'}
       >
         See all posts <span
@@ -51,3 +52,17 @@ const blog = await getRecentPosts(SITE.featuredPostCount)
     </div>
   </section>
 </Layout>
+
+<script>
+  function setupSeeAllPostsTracking() {
+    const link = document.getElementById('see-all-posts')
+    link?.removeEventListener('click', handleSeeAllPostsClick)
+    link?.addEventListener('click', handleSeeAllPostsClick)
+  }
+
+  function handleSeeAllPostsClick() {
+    window.posthog?.capture('see_all_posts_clicked')
+  }
+
+  document.addEventListener('astro:page-load', setupSeeAllPostsTracking)
+</script>
