@@ -21,6 +21,7 @@ const sortedTags = await getSortedTags()
           <Link
             href={`/tags/${tag}`}
             class={badgeVariants({ variant: 'secondary' })}
+            data-tag={tag}
           >
             <Icon name="lucide:hash" class="size-3" />
             {tag}
@@ -31,3 +32,20 @@ const sortedTags = await getSortedTags()
     </div>
   </div>
 </Layout>
+
+<script>
+  function setupTagsTracking() {
+    document
+      .querySelectorAll<HTMLAnchorElement>('a[data-tag]')
+      .forEach((link) => {
+        link.removeEventListener('click', handleTagBrowseClick)
+        link.addEventListener('click', handleTagBrowseClick)
+      })
+  }
+
+  function handleTagBrowseClick(this: HTMLAnchorElement) {
+    window.posthog?.capture('tag_browsed', { tag: this.dataset.tag })
+  }
+
+  document.addEventListener('astro:page-load', setupTagsTracking)
+</script>

@@ -22,6 +22,7 @@ const { links } = Astro.props
           title={label}
           class={buttonVariants({ variant: 'outline', size: 'icon' })}
           external
+          data-social-platform={label}
         >
           <Icon
             name={
@@ -35,3 +36,22 @@ const { links } = Astro.props
     ))
   }
 </ul>
+
+<script>
+  function setupSocialIconsTracking() {
+    document
+      .querySelectorAll<HTMLAnchorElement>('a[data-social-platform]')
+      .forEach((link) => {
+        link.removeEventListener('click', handleSocialLinkClick)
+        link.addEventListener('click', handleSocialLinkClick)
+      })
+  }
+
+  function handleSocialLinkClick(this: HTMLAnchorElement) {
+    window.posthog?.capture('social_link_clicked', {
+      platform: this.dataset.socialPlatform,
+    })
+  }
+
+  document.addEventListener('astro:page-load', setupSocialIconsTracking)
+</script>
