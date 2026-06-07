@@ -167,8 +167,9 @@ const formatDate = (dateString: string) => {
                   <p class="goodreads-user-updates">
                     <a href={itemData.userUrl} class="font-black goodreads-button">
                       <Icon name="lucide:user" class="goodreads-button-icon" />
-                      {update.data.title.split(" ")[0]}</a>
-                    <span>{itemData.readingStatus}</span>
+                      {update.data.title.split(" ")[0]}
+                    </a>
+                    <span class="ml-1">{itemData.readingStatus || "is reading"}</span>
                     <br class="hidden lg:block"/>
                     <a href={itemData.bookUrl} class="goodreads-button">
                       <Icon name="tabler:book" class="goodreads-button-icon" />

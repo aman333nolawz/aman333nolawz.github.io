@@ -106,6 +106,7 @@ figcaption {
   box-decoration-break: clone;
   padding-right: 0.25em;
   padding-left: 0.25em;
+  word-wrap: anywhere;
 }
 
 .goodreads-button-icon {
