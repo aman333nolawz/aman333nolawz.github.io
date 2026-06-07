@@ -65,7 +65,9 @@
     })(document, window.posthog || [])
     posthog.init(apiKey, {
       api_host: apiHost,
-      defaults: '2026-01-30',
+      ui_host: 'https://us.posthog.com',
+      defaults: '2026-05-30',
+      person_profiles: 'always',
       // IMPORTANT: Use 'history_change' to automatically track pageviews during soft navigation
       capture_pageview: 'history_change',
     })
