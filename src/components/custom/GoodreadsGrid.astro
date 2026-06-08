@@ -155,13 +155,13 @@ function formatDate(dateString: any) {
           >
             <div class="relative z-10 h-full w-full origin-bottom transform transition-all duration-300 group-hover:z-20 group-hover:-translate-y-1 group-hover:scale-130">
               <div
-                class="placeholder rounded-lg bg-gray-200 dark:bg-gray-900"
+                class="bg-secondary placeholder rounded-lg"
                 id={`placeholder-${book.data.book_id}`}
               >
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl">
                   <Icon
                     name="lucide:image"
-                    class="h-10 w-10 text-gray-400 dark:text-gray-700"
+                    class="text-muted-foreground h-10 w-10"
                   />
                 </div>
               </div>
@@ -205,7 +205,7 @@ function formatDate(dateString: any) {
             >
               {Array.from({ length: 5 }, (_, i) => (
                 <svg
-                  class={`h-4 w-4 ${i < Number(book.data.user_rating) ? 'text-black-500 dark:text-white' : 'text-gray-200 dark:text-gray-700'}`}
+                  class={`h-4 w-4 ${i < Number(book.data.user_rating) ? 'text-foreground' : 'text-muted'}`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >

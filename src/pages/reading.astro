@@ -12,33 +12,32 @@ import GoodreadsUserUpdates from '@/components/custom/GoodreadsUserUpdates.astro
   <Breadcrumbs items={[{ label: 'Reading', icon: 'lucide:book' }]} />
 
   <section>
-    <div class="lg:flex lg:gap-4">
-      <div class="lg:w-1/3">
-        <h2 class="mb-3 text-xl font-semibold text-gray-600">
+    <div class="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2.1fr)]">
+      <div>
+        <h2 class="mb-3">
           <a
             href="https://www.goodreads.com/user/show/201671700-aman-p"
             target="_blank"
-            class="relative inline-flex transform items-center rounded-full border border-[#723c0c]/25 bg-[#f9f6f2] px-3 py-0.5 text-sm font-medium text-[#723c0c] transition-transform hover:opacity-70 dark:border-[#f9f6f2]/25 dark:bg-[#723c0c] dark:text-[#f9f6f2]"
+            class="hover:bg-secondary/70 bg-background relative inline-flex items-center rounded-md border px-3 py-1 text-sm font-medium transition-colors"
           >
             <span
-              class="absolute left-2 h-2 w-2 animate-ping rounded-full bg-[#723c0c] duration-1400 dark:bg-[#f9f6f2]"
+              class="bg-primary absolute left-2 h-2 w-2 animate-ping rounded-full duration-1400"
             ></span>
-            <span
-              class="absolute left-2 h-2 w-2 rounded-full bg-[#723c0c] dark:bg-[#f9f6f2]"
+            <span class="bg-primary absolute left-2 h-2 w-2 rounded-full"
             ></span>
             <span class="ml-[10px]">Goodreads Activity</span>
           </a>
         </h2>
         <GoodreadsUserUpdates limit={10} />
       </div>
-      <div class="mt-8 lg:mt-0 lg:w-3/4">
-        <h2 class="mb-4 text-xl">
+      <div>
+        <h2 class="mb-4 text-2xl font-medium">
           <a
             href="https://www.goodreads.com/review/list/201671700-aman-p?shelf=read&sort=date_read&order=d"
             target="_blank"
-            class="text-md relative inline-flex transform items-center"
+            class="hover:text-muted-foreground transition-colors"
           >
-            Goodreads: Latest Reads
+            Latest reads
           </a>
         </h2>
         <GoodreadsGrid />

@@ -98,11 +98,11 @@ figcaption {
 }
 
 .goodreads-user-updates {
-  @apply text-[16px] text-gray-900 dark:text-gray-200 leading-4;
+  @apply text-foreground text-[16px] leading-5;
 }
 
 .goodreads-button {
-  @apply border border-[#723c0c]/25 dark:border-[#fcf9e6]/25 bg-[#fcf9e6] dark:bg-[#723c0c]/60 text-[#723c0c] dark:text-[#fcf9e6] hover:bg-[#723c0c] dark:hover:bg-[#fcf9e6] hover:text-[#fcf9e6] dark:hover:text-[#723c0c] transition-colors duration-200 rounded px-1 inline leading-[1.5] align-baseline;
+  @apply mr-1 border-border bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground inline rounded border px-1 align-baseline leading-[1.5] transition-colors duration-200;
   box-decoration-break: clone;
   padding-right: 0.25em;
   padding-left: 0.25em;
@@ -110,10 +110,9 @@ figcaption {
 }
 
 .goodreads-button-icon {
-  @apply w-4 h-4 mb-1 -mr-0.5 inline-block;
+  @apply -mr-0.5 mb-1 inline-block h-4 w-4;
 }
 
 .goodreads-user-css {
-  @apply border border-[#723c0c]/25 dark:border-[#fcf9e6]/25 bg-[#fcf9e6] dark:bg-[#723c0c]/60 text-[#723c0c] dark:text-[#fcf9e6] hover:bg-[#723c0c] dark:hover:bg-[#fcf9e6] hover:text-[#fcf9e6] dark:hover:text-[#723c0c] transition-colors duration-200 rounded px-1;
+  @apply border-border bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground rounded border px-1 transition-colors duration-200;
 }
-
