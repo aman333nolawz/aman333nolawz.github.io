@@ -385,7 +385,7 @@ const resourceTagCounts = Object.fromEntries(
       {
         resources.map((resource) => (
           <li
-            class="resource-item flex items-baseline gap-2 text-sm"
+            class="resource-item flex items-start gap-2 text-sm"
             data-tag={resource.tag}
           >
             <span
@@ -422,7 +422,7 @@ const resourceTagCounts = Object.fromEntries(
   .resource-badge {
     --resource-badge-rgb: 122 162 247;
     --resource-badge-foreground: #7aa2f7;
-    min-width: 3.5rem;
+    width: 4.2rem;
     border: 1px solid rgb(var(--resource-badge-rgb) / 0.28);
     background-color: rgb(var(--resource-badge-rgb) / 0.14);
     color: var(--resource-badge-foreground);
