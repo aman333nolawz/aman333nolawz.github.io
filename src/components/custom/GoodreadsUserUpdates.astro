@@ -10,12 +10,7 @@ interface Props {
   className?: string
 }
 
-const {
-  collection = 'goodreads_user_updates',
-  limit = 10,
-  showTypes,
-  className = '',
-} = Astro.props
+const { limit = 10, showTypes, className = '' } = Astro.props
 
 // Get the updates from the content collection
 const allUpdates = await getCollection('goodreads_user_updates')
@@ -196,7 +191,7 @@ const formatDate = (dateString: string) => {
                         />
                         {update.data.title.split(' ')[0]}
                       </a>
-                        {itemData.readingStatus || 'is reading'}
+                      {itemData.readingStatus || 'is reading'}
                       <br class="hidden lg:block" />
                       <a href={itemData.bookUrl} class="goodreads-button">
                         <Icon
@@ -212,7 +207,7 @@ const formatDate = (dateString: string) => {
                           <div
                             class="bg-primary h-2.5 rounded-full"
                             style={`width: 100%`}
-                          ></div>
+                          />
                         </div>
                         <span class="text-muted-foreground ml-2 text-sm">
                           100%
@@ -224,7 +219,7 @@ const formatDate = (dateString: string) => {
                           <div
                             class="bg-primary h-2.5 rounded-full"
                             style={`width: 0%`}
-                          ></div>
+                          />
                         </div>
                         <span class="text-muted-foreground ml-2 text-sm">
                           0%
@@ -356,7 +351,7 @@ const formatDate = (dateString: string) => {
                           <div
                             class="bg-primary h-2.5 rounded-full"
                             style={`width: ${itemData.percentRead}%`}
-                          ></div>
+                          />
                         </div>
                         <span class="text-muted-foreground ml-2 text-sm">
                           {itemData.percentRead}%

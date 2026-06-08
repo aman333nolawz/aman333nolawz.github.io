@@ -1,19 +1,19 @@
 import { glob } from 'astro/loaders'
 import { defineCollection, z } from 'astro:content'
-import { goodreadsLoader } from "astro-loader-goodreads";
+import { goodreadsLoader } from 'astro-loader-goodreads'
 
 const goodreads_read_books = defineCollection({
   loader: goodreadsLoader({
-    url: "https://www.goodreads.com/review/list_rss/201671700-aman-p?shelf=read", 
+    url: 'https://www.goodreads.com/review/list_rss/201671700-aman-p?shelf=read',
     refreshIntervalDays: 1,
-  })
-});
+  }),
+})
 
 const goodreads_user_updates = defineCollection({
   loader: goodreadsLoader({
-    url: "https://www.goodreads.com/user/show/201671700-aman-p",
+    url: 'https://www.goodreads.com/user/show/201671700-aman-p',
   }),
-});
+})
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
@@ -60,4 +60,10 @@ const projects = defineCollection({
     }),
 })
 
-export const collections = { blog, authors, projects, goodreads_read_books, goodreads_user_updates }
+export const collections = {
+  blog,
+  authors,
+  projects,
+  goodreads_read_books,
+  goodreads_user_updates,
+}

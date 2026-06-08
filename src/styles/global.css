@@ -102,7 +102,7 @@ figcaption {
 }
 
 .goodreads-button {
-  @apply mr-1 border-border bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground inline rounded border px-1 align-baseline leading-[1.5] transition-colors duration-200;
+  @apply border-border bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground mr-1 inline rounded border px-1 align-baseline leading-[1.5] transition-colors duration-200;
   box-decoration-break: clone;
   padding-right: 0.25em;
   padding-left: 0.25em;

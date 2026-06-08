@@ -36,13 +36,13 @@ const subpostCount = !isSubpost(entry.id) ? await getSubpostCount(entry.id) : 0
   >
     {
       entry.data.image && (
-      <div class="w-full sm:max-w-3xs sm:shrink-0">
-        <Image
-          src={entry.data.image}
-          alt={entry.data.title}
-          class="object-cover"
-        />
-      </div>
+        <div class="w-full sm:max-w-3xs sm:shrink-0">
+          <Image
+            src={entry.data.image}
+            alt={entry.data.title}
+            class="object-cover"
+          />
+        </div>
       )
     }
 
