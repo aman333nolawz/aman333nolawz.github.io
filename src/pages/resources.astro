@@ -4,11 +4,30 @@ import Link from '@/components/Link.astro'
 import PageHead from '@/components/PageHead.astro'
 import Layout from '@/layouts/Layout.astro'
 
-type ResourceCategory = 'book' | 'paper' | 'article'
+type ResourceTag =
+  | 'algorithms'
+  | 'assembly'
+  | 'blogs'
+  | 'crypto'
+  | 'ctf'
+  | 'graphics'
+  | 'linux'
+  | 'nix'
+  | 'resources'
+  | 'reveng'
+  | 'security'
+  | 'solvers'
+  | 'vcs'
+
+type ResourceTagMeta = {
+  label: string
+  rgb: string
+  foreground: string
+}
 
 type Resource = {
   title: string
-  category: ResourceCategory
+  tag: ResourceTag
   url: string
   source?: string
   note?: string
@@ -16,104 +35,314 @@ type Resource = {
 
 const resources: Resource[] = [
   {
-    title: 'Operating Systems: Three Easy Pieces',
-    category: 'book',
-    url: 'https://pages.cs.wisc.edu/~remzi/OSTEP/',
-    source: 'Remzi H. Arpaci-Dusseau, Andrea C. Arpaci-Dusseau',
-    note: 'Operating systems fundamentals',
+    title: 'Handbook of Applied Cryptography',
+    tag: 'crypto',
+    url: 'https://cacr.uwaterloo.ca/hac/',
   },
   {
-    title: 'The Rust Programming Language',
-    category: 'book',
-    url: 'https://doc.rust-lang.org/book/',
-    source: 'Steve Klabnik, Carol Nichols',
-    note: 'Rust language guide',
+    title: '3D Math Primer for Graphics and Game Development',
+    tag: 'graphics',
+    url: 'https://gamemath.com/book/',
   },
   {
-    title: 'xv6: A Simple, Unix-like Teaching Operating System',
-    category: 'book',
-    url: 'https://pdos.csail.mit.edu/6.828/2023/xv6/book-riscv-rev3.pdf',
-    source: 'MIT PDOS',
-    note: 'Small Unix-style kernel',
+    title: 'Linux Insides',
+    tag: 'linux',
+    url: 'https://0xax.gitbooks.io/linux-insides/content/index.html',
   },
   {
-    title: 'Crafting Interpreters',
-    category: 'book',
-    url: 'https://craftinginterpreters.com/',
-    source: 'Robert Nystrom',
-    note: 'Language implementation',
+    title: 'Cryptography Academy - Learn Cryptography For Free',
+    tag: 'crypto',
+    url: 'https://cryptographyacademy.com/',
   },
   {
-    title: 'Attention Is All You Need',
-    category: 'paper',
-    url: 'https://arxiv.org/abs/1706.03762',
-    source: 'Vaswani et al.',
-    note: 'Transformer architecture',
+    title: 'ARM Assembly By Example',
+    tag: 'assembly',
+    url: 'https://armasm.com/',
   },
   {
-    title: 'The UNIX Time-Sharing System',
-    category: 'paper',
-    url: 'https://dl.acm.org/doi/10.1145/361011.361061',
-    source: 'Dennis M. Ritchie, Ken Thompson',
-    note: 'Unix design',
+    title: "Steve's Jujutsu Tutorial",
+    tag: 'vcs',
+    url: 'https://steveklabnik.github.io/jujutsu-tutorial/introduction/introduction.html',
   },
   {
-    title: 'MapReduce: Simplified Data Processing on Large Clusters',
-    category: 'paper',
-    url: 'https://research.google/pubs/mapreduce-simplified-data-processing-on-large-clusters/',
-    source: 'Jeffrey Dean, Sanjay Ghemawat',
-    note: 'Distributed systems',
+    title: 'NixOS Manual',
+    tag: 'nix',
+    url: 'https://nixos.org/manual/nixos/stable/#preface',
   },
   {
-    title: 'The Next 700 Programming Languages',
-    category: 'paper',
-    url: 'https://www.cs.cmu.edu/~crary/819-f09/Landin66.pdf',
-    source: 'P. J. Landin',
-    note: 'Programming language foundations',
+    title: 'Nix 2.34.7 Reference Manual',
+    tag: 'nix',
+    url: 'https://nix.dev/manual/nix/2.34/nix-2.34.html',
   },
   {
-    title: 'What Every Programmer Should Know About Memory',
-    category: 'article',
-    url: 'https://people.freebsd.org/~lstewart/articles/cpumemory.pdf',
-    source: 'Ulrich Drepper',
-    note: 'Memory hierarchy and performance',
+    title: 'Nixpkgs Reference Manual',
+    tag: 'nix',
+    url: 'https://nixos.org/manual/nixpkgs/stable/#preface',
   },
   {
-    title: 'The Ultimate Guide to A* Search',
-    category: 'article',
-    url: 'https://www.redblobgames.com/pathfinding/a-star/introduction.html',
-    source: 'Red Blob Games',
-    note: 'Pathfinding visual guide',
+    title: 'Cryptology ePrint Archive',
+    tag: 'crypto',
+    url: 'https://eprint.iacr.org/',
   },
   {
-    title: 'Writing an OS in Rust',
-    category: 'article',
-    url: 'https://os.phil-opp.com/',
-    source: 'Philipp Oppermann',
-    note: 'Kernel development series',
+    title: 'The Path Explosion Problem in Symbolic Execution',
+    tag: 'solvers',
+    url: 'https://studenttheses.uu.nl/server/api/core/bitstreams/b9672f15-ef1a-4978-a09d-0be2ed3b2be8/content',
   },
   {
-    title: 'The Illustrated TLS Connection',
-    category: 'article',
-    url: 'https://tls13.xargs.org/',
-    source: 'Michael Driscoll',
-    note: 'TLS 1.3 walkthrough',
+    title: 'Programming Z3',
+    tag: 'solvers',
+    url: 'https://z3prover.github.io/papers/programmingz3.html#sec-using-solvers',
+  },
+  {
+    title: 'ashishps1/awesome-leetcode-resources',
+    tag: 'algorithms',
+    url: 'https://github.com/ashishps1/awesome-leetcode-resources?tab=readme-ov-file',
+  },
+  {
+    title: 'Bug Bounty Daily',
+    tag: 'security',
+    url: 'https://bugbountydaily.com/',
+  },
+  {
+    title:
+      'Rolling your own crypto: Everything you need to build AES from scratch',
+    tag: 'crypto',
+    url: 'https://github.com/francisrstokes/githublog/blob/main/2022/6/15/rolling-your-own-crypto-aes.md',
+  },
+  {
+    title: 'Cracking CTFs and Finding Zero-Days with AI-Agents',
+    tag: 'security',
+    url: 'https://medium.com/@harishhacker3010/cracking-ctfs-and-finding-zero-days-with-ai-agents-41a1083ba088',
+  },
+  {
+    title: 'Reverse Engineering Rustlang Binaries - A Series',
+    tag: 'reveng',
+    url: 'https://brightprogrammer.netlify.app/post/reverse-engineering-rustlang-binaries-0x1-empty-program/',
+  },
+  {
+    title: 'Pyjail Cheatsheet | Shirajuki',
+    tag: 'ctf',
+    url: 'https://shirajuki.js.org/blog/pyjail-cheatsheet/',
+  },
+  {
+    title: 'Root Me Reverse Engineering Repository',
+    tag: 'reveng',
+    url: 'https://repository.root-me.org/Reverse%20Engineering/',
+  },
+  {
+    title: 'International Journal of PoC | GTFO',
+    tag: 'security',
+    url: 'https://pocorgtfo.hacke.rs/',
+  },
+  {
+    title:
+      'R2R (Ready to Run) Stomping - WTF? - Technical | the.m3chanic = The Workshop',
+    tag: 'reveng',
+    url: 'https://the-m3chanic.github.io/2024/05/08/R2R-Ready-to-Run-Stomping-WTF/',
+  },
+  {
+    title: 'r/crypto Wiki: Your Guide to Cryptography',
+    tag: 'crypto',
+    url: 'https://www.reddit.com/r/crypto/wiki/index/',
+  },
+  {
+    title: 'Z3 JavaScript | Online Z3 Guide',
+    tag: 'solvers',
+    url: 'https://microsoft.github.io/z3guide/programming/Z3%20JavaScript%20Examples',
+  },
+  {
+    title: 'Understanding SMT solvers: An Introduction to Z3 - de engineering',
+    tag: 'solvers',
+    url: 'https://de-engineer.github.io/SMT-Solvers/#another-example',
+  },
+  {
+    title: 'Bit Twiddling Hacks',
+    tag: 'solvers',
+    url: 'https://graphics.stanford.edu/~seander/bithacks.html#ModulusDivisionEasy',
+  },
+  {
+    title: 'Integration with other tools — Arybo 1.0.0 documentation',
+    tag: 'solvers',
+    url: 'https://pythonhosted.org/arybo/integration.html#triton',
+  },
+  {
+    title: 'Blog | RPISEC',
+    tag: 'security',
+    url: 'https://rpis.ec/blog/',
+  },
+  {
+    title: 'Reverse Engineering | madStacks.dev',
+    tag: 'reveng',
+    url: 'https://www.madstacks.dev/posts/Reversing-Notes/',
+  },
+  {
+    title: 'Triton: A dynamic binary analysis library',
+    tag: 'reveng',
+    url: 'https://triton-library.github.io/',
+  },
+  {
+    title: 'ANTI-DISASSEMBLY TECHNIQUES',
+    tag: 'reveng',
+    url: 'https://1malware1.medium.com/anti-disassembly-techniques-e012338f2ae0',
+  },
+  {
+    title: 'GDB Advanced Debugging Skills | Axura',
+    tag: 'reveng',
+    url: 'https://4xura.com/hacktools/binarytool/gdb-advanced-debugging-skills/#toc-head-64',
+  },
+  {
+    title: 'Writeups | nightxade',
+    tag: 'ctf',
+    url: 'https://nightxade.dev/writeups/',
+  },
+  {
+    title: 'Mitchell Hashimoto',
+    tag: 'blogs',
+    url: 'https://mitchellh.com/writing',
+  },
+  {
+    title: ' Carlos Becker | Blog',
+    tag: 'blogs',
+    url: 'https://carlosbecker.com/posts/',
+  },
+  {
+    title: 'マリウス',
+    tag: 'blogs',
+    url: 'https://xn--gckvb8fzb.com/',
+  },
+  {
+    title: 'Blog - Ham Vocke',
+    tag: 'blogs',
+    url: 'https://hamvocke.com/blog/',
+  },
+  {
+    title: 'parasrah',
+    tag: 'blogs',
+    url: 'https://blog.parasrah.com/posts',
+  },
+  {
+    title: 'samwho',
+    tag: 'blogs',
+    url: 'https://samwho.dev/',
+  },
+  {
+    title: 'Paged Out!',
+    tag: 'security',
+    url: 'https://pagedout.institute/',
+  },
+  {
+    title: 'tmp.0ut',
+    tag: 'security',
+    url: 'https://tmpout.sh/',
+  },
+  {
+    title: 'matklad',
+    tag: 'blogs',
+    url: 'https://matklad.github.io/',
+  },
+  {
+    title: "Thunderseethe's Devlog",
+    tag: 'blogs',
+    url: 'https://thunderseethe.dev/posts/',
+  },
+  {
+    title: 'Bootean',
+    tag: 'blogs',
+    url: 'https://bootean.github.io/links.html',
+  },
+  {
+    title: 'secret.club',
+    tag: 'security',
+    url: 'https://secret.club/',
+  },
+  {
+    title: 'Computer Science Resource Index (/src/)',
+    tag: 'resources',
+    url: 'https://cxinu.github.io/posts/src_compilation.html',
+  },
+  {
+    title: 'Reading | nightxade',
+    tag: 'resources',
+    url: 'https://nightxade.dev/reading/',
   },
 ]
 
-const resourceCounts = {
-  all: resources.length,
-  book: resources.filter((resource) => resource.category === 'book').length,
-  paper: resources.filter((resource) => resource.category === 'paper').length,
-  article: resources.filter((resource) => resource.category === 'article')
-    .length,
+const resourceTagMeta: Record<ResourceTag, ResourceTagMeta> = {
+  algorithms: {
+    label: 'algorithms',
+    rgb: '247 118 142',
+    foreground: '#f7768e',
+  },
+  assembly: {
+    label: 'assembly',
+    rgb: '255 158 100',
+    foreground: '#ff9e64',
+  },
+  blogs: {
+    label: 'blogs',
+    rgb: '187 154 247',
+    foreground: '#bb9af7',
+  },
+  crypto: {
+    label: 'crypto',
+    rgb: '122 162 247',
+    foreground: '#7aa2f7',
+  },
+  ctf: {
+    label: 'ctf',
+    rgb: '115 218 202',
+    foreground: '#73daca',
+  },
+  graphics: {
+    label: 'graphics',
+    rgb: '158 206 106',
+    foreground: '#9ece6a',
+  },
+  linux: {
+    label: 'linux',
+    rgb: '224 175 104',
+    foreground: '#e0af68',
+  },
+  nix: {
+    label: 'nix',
+    rgb: '125 207 255',
+    foreground: '#7dcfff',
+  },
+  resources: {
+    label: 'resources',
+    rgb: '148 163 184',
+    foreground: '#94a3b8',
+  },
+  reveng: {
+    label: 'reveng',
+    rgb: '255 117 127',
+    foreground: '#ff757f',
+  },
+  security: {
+    label: 'security',
+    rgb: '65 166 181',
+    foreground: '#41a6b5',
+  },
+  solvers: {
+    label: 'solvers',
+    rgb: '180 249 248',
+    foreground: '#b4f9f8',
+  },
+  vcs: {
+    label: 'vcs',
+    rgb: '196 167 231',
+    foreground: '#c4a7e7',
+  },
 }
 
-const resourceCategoryLabel: Record<ResourceCategory, string> = {
-  book: 'book',
-  paper: 'paper',
-  article: 'article',
-}
+const resourceTags = Object.keys(resourceTagMeta) as ResourceTag[]
+const resourceTagCounts = Object.fromEntries(
+  resourceTags.map((tag) => [
+    tag,
+    resources.filter((resource) => resource.tag === tag).length,
+  ]),
+) as Record<ResourceTag, number>
 ---
 
 <Layout class="max-w-3xl">
@@ -124,7 +353,7 @@ const resourceCategoryLabel: Record<ResourceCategory, string> = {
     <div>
       <h1 class="text-2xl font-medium">Resources</h1>
       <p class="text-muted-foreground mt-1 text-sm">
-        Books, papers, and articles worth keeping close.
+        Technical references, writeups, and essays worth keeping close.
       </p>
     </div>
 
@@ -132,14 +361,12 @@ const resourceCategoryLabel: Record<ResourceCategory, string> = {
       {
         (
           [
-            { target: 'all', label: 'All', count: resourceCounts.all },
-            { target: 'book', label: 'Books', count: resourceCounts.book },
-            { target: 'paper', label: 'Papers', count: resourceCounts.paper },
-            {
-              target: 'article',
-              label: 'Articles',
-              count: resourceCounts.article,
-            },
+            { target: 'all', label: 'all', count: resources.length },
+            ...resourceTags.map((tag) => ({
+              target: tag,
+              label: resourceTagMeta[tag].label,
+              count: resourceTagCounts[tag],
+            })),
           ] as const
         ).map(({ target, label, count }) => (
           <button
@@ -159,17 +386,13 @@ const resourceCategoryLabel: Record<ResourceCategory, string> = {
         resources.map((resource) => (
           <li
             class="resource-item flex items-baseline gap-2 text-sm"
-            data-category={resource.category}
+            data-tag={resource.tag}
           >
             <span
-              class:list={[
-                'resource-badge shrink-0 rounded px-1.5 py-0.5 text-[11px] font-medium',
-                resource.category === 'book' && 'resource-badge-book',
-                resource.category === 'paper' && 'resource-badge-paper',
-                resource.category === 'article' && 'resource-badge-article',
-              ]}
+              class="resource-badge shrink-0 rounded px-1.5 py-0.5 text-[11px] font-medium"
+              style={`--resource-badge-rgb: ${resourceTagMeta[resource.tag].rgb}; --resource-badge-foreground: ${resourceTagMeta[resource.tag].foreground};`}
             >
-              {resourceCategoryLabel[resource.category]}
+              {resourceTagMeta[resource.tag].label}
             </span>
             <span class="min-w-0 flex-1">
               <Link
@@ -199,28 +422,13 @@ const resourceCategoryLabel: Record<ResourceCategory, string> = {
   .resource-badge {
     --resource-badge-rgb: 122 162 247;
     --resource-badge-foreground: #7aa2f7;
-    width: 3.5rem;
+    min-width: 3.5rem;
     border: 1px solid rgb(var(--resource-badge-rgb) / 0.28);
     background-color: rgb(var(--resource-badge-rgb) / 0.14);
     color: var(--resource-badge-foreground);
     backdrop-filter: blur(10px) saturate(140%);
     box-shadow: inset 0 1px 0 rgb(var(--resource-badge-rgb) / 0.12);
     text-align: center;
-  }
-
-  .resource-badge-book {
-    --resource-badge-rgb: 122 162 247;
-    --resource-badge-foreground: #7aa2f7;
-  }
-
-  .resource-badge-paper {
-    --resource-badge-rgb: 187 154 247;
-    --resource-badge-foreground: #bb9af7;
-  }
-
-  .resource-badge-article {
-    --resource-badge-rgb: 158 206 106;
-    --resource-badge-foreground: #9ece6a;
   }
 
   .resource-filter-btn {
@@ -263,7 +471,7 @@ const resourceCategoryLabel: Record<ResourceCategory, string> = {
     function render() {
       items.forEach((item) => {
         const inFilter =
-          currentFilter === 'all' || item.dataset.category === currentFilter
+          currentFilter === 'all' || item.dataset.tag === currentFilter
         item.classList.toggle('hidden', !inFilter)
       })
     }
