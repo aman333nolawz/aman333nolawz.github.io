@@ -1,0 +1,288 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import Link from '@/components/Link.astro'
+import PageHead from '@/components/PageHead.astro'
+import Layout from '@/layouts/Layout.astro'
+
+type ResourceCategory = 'book' | 'paper' | 'article'
+
+type Resource = {
+  title: string
+  category: ResourceCategory
+  url: string
+  source?: string
+  note?: string
+}
+
+const resources: Resource[] = [
+  {
+    title: 'Operating Systems: Three Easy Pieces',
+    category: 'book',
+    url: 'https://pages.cs.wisc.edu/~remzi/OSTEP/',
+    source: 'Remzi H. Arpaci-Dusseau, Andrea C. Arpaci-Dusseau',
+    note: 'Operating systems fundamentals',
+  },
+  {
+    title: 'The Rust Programming Language',
+    category: 'book',
+    url: 'https://doc.rust-lang.org/book/',
+    source: 'Steve Klabnik, Carol Nichols',
+    note: 'Rust language guide',
+  },
+  {
+    title: 'xv6: A Simple, Unix-like Teaching Operating System',
+    category: 'book',
+    url: 'https://pdos.csail.mit.edu/6.828/2023/xv6/book-riscv-rev3.pdf',
+    source: 'MIT PDOS',
+    note: 'Small Unix-style kernel',
+  },
+  {
+    title: 'Crafting Interpreters',
+    category: 'book',
+    url: 'https://craftinginterpreters.com/',
+    source: 'Robert Nystrom',
+    note: 'Language implementation',
+  },
+  {
+    title: 'Attention Is All You Need',
+    category: 'paper',
+    url: 'https://arxiv.org/abs/1706.03762',
+    source: 'Vaswani et al.',
+    note: 'Transformer architecture',
+  },
+  {
+    title: 'The UNIX Time-Sharing System',
+    category: 'paper',
+    url: 'https://dl.acm.org/doi/10.1145/361011.361061',
+    source: 'Dennis M. Ritchie, Ken Thompson',
+    note: 'Unix design',
+  },
+  {
+    title: 'MapReduce: Simplified Data Processing on Large Clusters',
+    category: 'paper',
+    url: 'https://research.google/pubs/mapreduce-simplified-data-processing-on-large-clusters/',
+    source: 'Jeffrey Dean, Sanjay Ghemawat',
+    note: 'Distributed systems',
+  },
+  {
+    title: 'The Next 700 Programming Languages',
+    category: 'paper',
+    url: 'https://www.cs.cmu.edu/~crary/819-f09/Landin66.pdf',
+    source: 'P. J. Landin',
+    note: 'Programming language foundations',
+  },
+  {
+    title: 'What Every Programmer Should Know About Memory',
+    category: 'article',
+    url: 'https://people.freebsd.org/~lstewart/articles/cpumemory.pdf',
+    source: 'Ulrich Drepper',
+    note: 'Memory hierarchy and performance',
+  },
+  {
+    title: 'The Ultimate Guide to A* Search',
+    category: 'article',
+    url: 'https://www.redblobgames.com/pathfinding/a-star/introduction.html',
+    source: 'Red Blob Games',
+    note: 'Pathfinding visual guide',
+  },
+  {
+    title: 'Writing an OS in Rust',
+    category: 'article',
+    url: 'https://os.phil-opp.com/',
+    source: 'Philipp Oppermann',
+    note: 'Kernel development series',
+  },
+  {
+    title: 'The Illustrated TLS Connection',
+    category: 'article',
+    url: 'https://tls13.xargs.org/',
+    source: 'Michael Driscoll',
+    note: 'TLS 1.3 walkthrough',
+  },
+]
+
+const resourceCounts = {
+  all: resources.length,
+  book: resources.filter((resource) => resource.category === 'book').length,
+  paper: resources.filter((resource) => resource.category === 'paper').length,
+  article: resources.filter((resource) => resource.category === 'article')
+    .length,
+}
+
+const resourceCategoryLabel: Record<ResourceCategory, string> = {
+  book: 'book',
+  paper: 'paper',
+  article: 'article',
+}
+---
+
+<Layout class="max-w-3xl">
+  <PageHead slot="head" title="Resources" />
+  <Breadcrumbs items={[{ label: 'Resources', icon: 'lucide:library' }]} />
+
+  <section class="flex flex-col gap-y-5">
+    <div>
+      <h1 class="text-2xl font-medium">Resources</h1>
+      <p class="text-muted-foreground mt-1 text-sm">
+        Books, papers, and articles worth keeping close.
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-2" id="resources-filter-bar">
+      {
+        (
+          [
+            { target: 'all', label: 'All', count: resourceCounts.all },
+            { target: 'book', label: 'Books', count: resourceCounts.book },
+            { target: 'paper', label: 'Papers', count: resourceCounts.paper },
+            {
+              target: 'article',
+              label: 'Articles',
+              count: resourceCounts.article,
+            },
+          ] as const
+        ).map(({ target, label, count }) => (
+          <button
+            class="resource-filter-btn inline-flex h-9 cursor-pointer items-center rounded-md px-3 text-sm font-medium transition-all"
+            data-target={target}
+            data-active={target === 'all' ? 'true' : 'false'}
+          >
+            {label}
+            <span class="ml-1.5 font-normal opacity-60">{count}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    <ul class="flex flex-col gap-1.5" id="resources-list">
+      {
+        resources.map((resource) => (
+          <li
+            class="resource-item flex items-baseline gap-2 text-sm"
+            data-category={resource.category}
+          >
+            <span
+              class:list={[
+                'resource-badge shrink-0 rounded px-1.5 py-0.5 text-[11px] font-medium',
+                resource.category === 'book' && 'resource-badge-book',
+                resource.category === 'paper' && 'resource-badge-paper',
+                resource.category === 'article' && 'resource-badge-article',
+              ]}
+            >
+              {resourceCategoryLabel[resource.category]}
+            </span>
+            <span class="min-w-0 flex-1">
+              <Link
+                href={resource.url}
+                external
+                underline
+                class="text-foreground hover:text-muted-foreground transition-colors"
+              >
+                {resource.title}
+              </Link>
+              {(resource.source || resource.note) && (
+                <span class="text-muted-foreground ml-1">
+                  {resource.source && <span>{resource.source}</span>}
+                  {resource.source && resource.note && <span> · </span>}
+                  {resource.note && <span>{resource.note}</span>}
+                </span>
+              )}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>
+
+<style>
+  .resource-badge {
+    --resource-badge-rgb: 122 162 247;
+    --resource-badge-foreground: #7aa2f7;
+    width: 3.5rem;
+    border: 1px solid rgb(var(--resource-badge-rgb) / 0.28);
+    background-color: rgb(var(--resource-badge-rgb) / 0.14);
+    color: var(--resource-badge-foreground);
+    backdrop-filter: blur(10px) saturate(140%);
+    box-shadow: inset 0 1px 0 rgb(var(--resource-badge-rgb) / 0.12);
+    text-align: center;
+  }
+
+  .resource-badge-book {
+    --resource-badge-rgb: 122 162 247;
+    --resource-badge-foreground: #7aa2f7;
+  }
+
+  .resource-badge-paper {
+    --resource-badge-rgb: 187 154 247;
+    --resource-badge-foreground: #bb9af7;
+  }
+
+  .resource-badge-article {
+    --resource-badge-rgb: 158 206 106;
+    --resource-badge-foreground: #9ece6a;
+  }
+
+  .resource-filter-btn {
+    color: var(--muted-foreground);
+  }
+
+  .resource-filter-btn:hover {
+    background-color: var(--muted);
+    color: var(--foreground);
+  }
+
+  .resource-filter-btn[data-active='true'] {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+
+  .resource-filter-btn[data-active='true']:hover {
+    background-color: color-mix(in oklch, var(--primary) 90%, transparent);
+  }
+
+  .resource-item.hidden {
+    display: none;
+  }
+</style>
+
+<script is:inline data-astro-rerun>
+  ;(() => {
+    const filterBar = document.getElementById('resources-filter-bar')
+    const resourcesList = document.getElementById('resources-list')
+
+    if (!filterBar || !resourcesList) return
+
+    const filterBtns = Array.from(
+      filterBar.querySelectorAll('.resource-filter-btn'),
+    )
+    const items = Array.from(resourcesList.querySelectorAll('.resource-item'))
+
+    let currentFilter = 'all'
+
+    function render() {
+      items.forEach((item) => {
+        const inFilter =
+          currentFilter === 'all' || item.dataset.category === currentFilter
+        item.classList.toggle('hidden', !inFilter)
+      })
+    }
+
+    filterBar.addEventListener('click', (event) => {
+      const target = event.target instanceof Element ? event.target : null
+      const button = target?.closest('.resource-filter-btn')
+      if (!button?.dataset.target) return
+
+      currentFilter = button.dataset.target
+      filterBtns.forEach((filterButton) => {
+        filterButton.dataset.active = String(
+          filterButton.dataset.target === currentFilter,
+        )
+      })
+
+      render()
+    })
+
+    render()
+  })()
+</script>
