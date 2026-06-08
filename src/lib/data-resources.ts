@@ -1,0 +1,332 @@
+export type ResourceTag =
+  | 'algorithms'
+  | 'assembly'
+  | 'blogs'
+  | 'crypto'
+  | 'ctf'
+  | 'graphics'
+  | 'linux'
+  | 'nix'
+  | 'resources'
+  | 'reveng'
+  | 'security'
+  | 'solvers'
+  | 'vcs'
+
+export type ResourceTagMeta = {
+  label: string
+  rgb: string
+  foreground: string
+}
+
+
+export type Resource = {
+  title: string
+  tag: ResourceTag
+  url: string
+  source?: string
+  note?: string
+}
+
+export const resources: Resource[] = [
+  {
+    title: 'Handbook of Applied Cryptography',
+    tag: 'crypto',
+    url: 'https://cacr.uwaterloo.ca/hac/',
+  },
+  {
+    title: '3D Math Primer for Graphics and Game Development',
+    tag: 'graphics',
+    url: 'https://gamemath.com/book/',
+  },
+  {
+    title: 'Linux Insides',
+    tag: 'linux',
+    url: 'https://0xax.gitbooks.io/linux-insides/content/index.html',
+  },
+  {
+    title: 'Cryptography Academy - Learn Cryptography For Free',
+    tag: 'crypto',
+    url: 'https://cryptographyacademy.com/',
+  },
+  {
+    title: 'ARM Assembly By Example',
+    tag: 'assembly',
+    url: 'https://armasm.com/',
+  },
+  {
+    title: "Steve's Jujutsu Tutorial",
+    tag: 'vcs',
+    url: 'https://steveklabnik.github.io/jujutsu-tutorial/introduction/introduction.html',
+  },
+  {
+    title: 'NixOS Manual',
+    tag: 'nix',
+    url: 'https://nixos.org/manual/nixos/stable/#preface',
+  },
+  {
+    title: 'Nix 2.34.7 Reference Manual',
+    tag: 'nix',
+    url: 'https://nix.dev/manual/nix/2.34/nix-2.34.html',
+  },
+  {
+    title: 'Nixpkgs Reference Manual',
+    tag: 'nix',
+    url: 'https://nixos.org/manual/nixpkgs/stable/#preface',
+  },
+  {
+    title: 'Cryptology ePrint Archive',
+    tag: 'crypto',
+    url: 'https://eprint.iacr.org/',
+  },
+  {
+    title: 'The Path Explosion Problem in Symbolic Execution',
+    tag: 'solvers',
+    url: 'https://studenttheses.uu.nl/server/api/core/bitstreams/b9672f15-ef1a-4978-a09d-0be2ed3b2be8/content',
+  },
+  {
+    title: 'Programming Z3',
+    tag: 'solvers',
+    url: 'https://z3prover.github.io/papers/programmingz3.html#sec-using-solvers',
+  },
+  {
+    title: 'ashishps1/awesome-leetcode-resources',
+    tag: 'algorithms',
+    url: 'https://github.com/ashishps1/awesome-leetcode-resources?tab=readme-ov-file',
+  },
+  {
+    title: 'Bug Bounty Daily',
+    tag: 'security',
+    url: 'https://bugbountydaily.com/',
+  },
+  {
+    title:
+      'Rolling your own crypto: Everything you need to build AES from scratch',
+    tag: 'crypto',
+    url: 'https://github.com/francisrstokes/githublog/blob/main/2022/6/15/rolling-your-own-crypto-aes.md',
+  },
+  {
+    title: 'Cracking CTFs and Finding Zero-Days with AI-Agents',
+    tag: 'security',
+    url: 'https://medium.com/@harishhacker3010/cracking-ctfs-and-finding-zero-days-with-ai-agents-41a1083ba088',
+  },
+  {
+    title: 'Reverse Engineering Rustlang Binaries - A Series',
+    tag: 'reveng',
+    url: 'https://brightprogrammer.netlify.app/post/reverse-engineering-rustlang-binaries-0x1-empty-program/',
+  },
+  {
+    title: 'Pyjail Cheatsheet | Shirajuki',
+    tag: 'ctf',
+    url: 'https://shirajuki.js.org/blog/pyjail-cheatsheet/',
+  },
+  {
+    title: 'Root Me Reverse Engineering Repository',
+    tag: 'reveng',
+    url: 'https://repository.root-me.org/Reverse%20Engineering/',
+  },
+  {
+    title: 'International Journal of PoC | GTFO',
+    tag: 'security',
+    url: 'https://pocorgtfo.hacke.rs/',
+  },
+  {
+    title:
+      'R2R (Ready to Run) Stomping - WTF? - Technical | the.m3chanic = The Workshop',
+    tag: 'reveng',
+    url: 'https://the-m3chanic.github.io/2024/05/08/R2R-Ready-to-Run-Stomping-WTF/',
+  },
+  {
+    title: 'r/crypto Wiki: Your Guide to Cryptography',
+    tag: 'crypto',
+    url: 'https://www.reddit.com/r/crypto/wiki/index/',
+  },
+  {
+    title: 'Z3 JavaScript | Online Z3 Guide',
+    tag: 'solvers',
+    url: 'https://microsoft.github.io/z3guide/programming/Z3%20JavaScript%20Examples',
+  },
+  {
+    title: 'Understanding SMT solvers: An Introduction to Z3 - de engineering',
+    tag: 'solvers',
+    url: 'https://de-engineer.github.io/SMT-Solvers/#another-example',
+  },
+  {
+    title: 'Bit Twiddling Hacks',
+    tag: 'solvers',
+    url: 'https://graphics.stanford.edu/~seander/bithacks.html#ModulusDivisionEasy',
+  },
+  {
+    title: 'Integration with other tools — Arybo 1.0.0 documentation',
+    tag: 'solvers',
+    url: 'https://pythonhosted.org/arybo/integration.html#triton',
+  },
+  {
+    title: 'Blog | RPISEC',
+    tag: 'security',
+    url: 'https://rpis.ec/blog/',
+  },
+  {
+    title: 'Reverse Engineering | madStacks.dev',
+    tag: 'reveng',
+    url: 'https://www.madstacks.dev/posts/Reversing-Notes/',
+  },
+  {
+    title: 'Triton: A dynamic binary analysis library',
+    tag: 'reveng',
+    url: 'https://triton-library.github.io/',
+  },
+  {
+    title: 'ANTI-DISASSEMBLY TECHNIQUES',
+    tag: 'reveng',
+    url: 'https://1malware1.medium.com/anti-disassembly-techniques-e012338f2ae0',
+  },
+  {
+    title: 'GDB Advanced Debugging Skills | Axura',
+    tag: 'reveng',
+    url: 'https://4xura.com/hacktools/binarytool/gdb-advanced-debugging-skills/#toc-head-64',
+  },
+  {
+    title: 'Writeups | nightxade',
+    tag: 'ctf',
+    url: 'https://nightxade.dev/writeups/',
+  },
+  {
+    title: 'Mitchell Hashimoto',
+    tag: 'blogs',
+    url: 'https://mitchellh.com/writing',
+  },
+  {
+    title: ' Carlos Becker | Blog',
+    tag: 'blogs',
+    url: 'https://carlosbecker.com/posts/',
+  },
+  {
+    title: 'マリウス',
+    tag: 'blogs',
+    url: 'https://xn--gckvb8fzb.com/',
+  },
+  {
+    title: 'Blog - Ham Vocke',
+    tag: 'blogs',
+    url: 'https://hamvocke.com/blog/',
+  },
+  {
+    title: 'parasrah',
+    tag: 'blogs',
+    url: 'https://blog.parasrah.com/posts',
+  },
+  {
+    title: 'samwho',
+    tag: 'blogs',
+    url: 'https://samwho.dev/',
+  },
+  {
+    title: 'Paged Out!',
+    tag: 'security',
+    url: 'https://pagedout.institute/',
+  },
+  {
+    title: 'tmp.0ut',
+    tag: 'security',
+    url: 'https://tmpout.sh/',
+  },
+  {
+    title: 'matklad',
+    tag: 'blogs',
+    url: 'https://matklad.github.io/',
+  },
+  {
+    title: "Thunderseethe's Devlog",
+    tag: 'blogs',
+    url: 'https://thunderseethe.dev/posts/',
+  },
+  {
+    title: 'Bootean',
+    tag: 'blogs',
+    url: 'https://bootean.github.io/links.html',
+  },
+  {
+    title: 'secret.club',
+    tag: 'security',
+    url: 'https://secret.club/',
+  },
+  {
+    title: 'Computer Science Resource Index (/src/)',
+    tag: 'resources',
+    url: 'https://cxinu.github.io/posts/src_compilation.html',
+  },
+  {
+    title: 'Reading | nightxade',
+    tag: 'resources',
+    url: 'https://nightxade.dev/reading/',
+  },
+]
+
+export const resourceTagMeta: Record<ResourceTag, ResourceTagMeta> = {
+  algorithms: {
+    label: 'algorithms',
+    rgb: '247 118 142',
+    foreground: '#f7768e',
+  },
+  assembly: {
+    label: 'assembly',
+    rgb: '255 158 100',
+    foreground: '#ff9e64',
+  },
+  blogs: {
+    label: 'blogs',
+    rgb: '187 154 247',
+    foreground: '#bb9af7',
+  },
+  crypto: {
+    label: 'crypto',
+    rgb: '122 162 247',
+    foreground: '#7aa2f7',
+  },
+  ctf: {
+    label: 'ctf',
+    rgb: '115 218 202',
+    foreground: '#73daca',
+  },
+  graphics: {
+    label: 'graphics',
+    rgb: '158 206 106',
+    foreground: '#9ece6a',
+  },
+  linux: {
+    label: 'linux',
+    rgb: '224 175 104',
+    foreground: '#e0af68',
+  },
+  nix: {
+    label: 'nix',
+    rgb: '125 207 255',
+    foreground: '#7dcfff',
+  },
+  resources: {
+    label: 'resources',
+    rgb: '148 163 184',
+    foreground: '#94a3b8',
+  },
+  reveng: {
+    label: 'reveng',
+    rgb: '255 117 127',
+    foreground: '#ff757f',
+  },
+  security: {
+    label: 'security',
+    rgb: '65 166 181',
+    foreground: '#41a6b5',
+  },
+  solvers: {
+    label: 'solvers',
+    rgb: '180 249 248',
+    foreground: '#b4f9f8',
+  },
+  vcs: {
+    label: 'vcs',
+    rgb: '196 167 231',
+    foreground: '#c4a7e7',
+  },
+}
