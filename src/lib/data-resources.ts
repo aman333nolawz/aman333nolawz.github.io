@@ -192,12 +192,22 @@ export const resources: Resource[] = [
     url: 'https://nightxade.dev/writeups/',
   },
   {
+    title: "Sam Curry",
+    tag: "blogs",
+    url: "https://samcurry.net/"
+  },
+  {
     title: 'Mitchell Hashimoto',
     tag: 'blogs',
     url: 'https://mitchellh.com/writing',
   },
   {
-    title: ' Carlos Becker | Blog',
+    title: "mcyoung",
+    tag: "blogs",
+    url: "https://mcyoung.xyz/"
+  },
+  {
+    title: 'Carlos Becker | Blog',
     tag: 'blogs',
     url: 'https://carlosbecker.com/posts/',
   },
