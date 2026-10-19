@@ -116,6 +116,11 @@ export const resources: Resource[] = [
     url: 'https://brightprogrammer.netlify.app/post/reverse-engineering-rustlang-binaries-0x1-empty-program/',
   },
   {
+    title: "Geoff Chappel | Kernel-Mode Windows",
+    tag: 'reveng',
+    url: "https://www.geoffchappell.com/studies/windows/km/index.htm"
+  },
+  {
     title: 'Pyjail Cheatsheet | Shirajuki',
     tag: 'ctf',
     url: 'https://shirajuki.js.org/blog/pyjail-cheatsheet/',
