@@ -11,7 +11,7 @@ const tags = await getTags()
   <ul>
     {[...tags].map(([tag, posts]) => (
       <li>
-        <a href={`/tags/${tag}`}>
+        <a href={`/tags/${tag}`} data-tag={tag}>
           #{tag}
           <tag-count>{posts.length}</tag-count>
         </a>
@@ -19,6 +19,24 @@ const tags = await getTags()
     ))}
   </ul>
 </Layout>
+
+<script>
+  const handleTagBrowseClick = function (this: HTMLAnchorElement) {
+    window.posthog?.capture("tag_browsed", { tag: this.dataset.tag })
+  }
+
+  function setupTagsTracking() {
+    document
+      .querySelectorAll<HTMLAnchorElement>("a[data-tag]")
+      .forEach((link) => {
+        link.removeEventListener("click", handleTagBrowseClick)
+        link.addEventListener("click", handleTagBrowseClick)
+      })
+  }
+
+  setupTagsTracking()
+  document.addEventListener("astro:page-load", setupTagsTracking)
+</script>
 
 <style>
   ul {

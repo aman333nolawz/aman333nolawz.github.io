@@ -121,7 +121,9 @@ if (isSubpost(post.id)) {
         {current.entry.data.tags && (
           <post-tags>
             {current.entry.data.tags.map((tag) => (
-              <a href={`/tags/${tag}`}>#{tag}</a>
+              <a href={`/tags/${tag}`} data-tag={tag}>
+                #{tag}
+              </a>
             ))}
           </post-tags>
         )}
@@ -160,6 +162,24 @@ if (isSubpost(post.id)) {
     />
   )}
 </Layout>
+
+<script>
+  const handleTagClick = function (this: HTMLAnchorElement) {
+    window.posthog?.capture("tag_clicked", { tag: this.dataset.tag })
+  }
+
+  function setupPostTagTracking() {
+    document
+      .querySelectorAll<HTMLAnchorElement>("post-tags a[data-tag]")
+      .forEach((link) => {
+        link.removeEventListener("click", handleTagClick)
+        link.addEventListener("click", handleTagClick)
+      })
+  }
+
+  setupPostTagTracking()
+  document.addEventListener("astro:page-load", setupPostTagTracking)
+</script>
 
 <style>
   header {

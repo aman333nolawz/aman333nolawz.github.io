@@ -24,7 +24,14 @@ const { name, description, link, tags, image, startDate, endDate } =
     </a>
   )}
   <entry-info>
-    <a href={link} target="_blank" rel="noopener noreferrer">{name}</a>
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-project-name={name}
+      data-project-link={link}
+      >{name}</a
+    >
     <entry-meta>
       {startDate && (
         <project-dates>
@@ -54,6 +61,27 @@ const { name, description, link, tags, image, startDate, endDate } =
     )}
   </entry-info>
 </li>
+
+<script>
+  const handleProjectCardClick = function (this: HTMLAnchorElement) {
+    window.posthog?.capture("project_link_clicked", {
+      project_name: this.dataset.projectName,
+      project_link: this.dataset.projectLink,
+    })
+  }
+
+  function setupProjectCardTracking() {
+    document
+      .querySelectorAll<HTMLAnchorElement>("a[data-project-name]")
+      .forEach((link) => {
+        link.removeEventListener("click", handleProjectCardClick)
+        link.addEventListener("click", handleProjectCardClick)
+      })
+  }
+
+  setupProjectCardTracking()
+  document.addEventListener("astro:page-load", setupProjectCardTracking)
+</script>
 
 <style>
   li {

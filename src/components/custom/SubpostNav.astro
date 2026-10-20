@@ -12,7 +12,12 @@ const { prev, next } = Astro.props
 
 <div class="subpost-nav">
   {prev && (
-    <a class="subpost-card prev" href={prev.href}>
+    <a
+      class="subpost-card prev"
+      href={prev.href}
+      data-nav-direction="previous"
+      data-nav-post-title={prev.title}
+    >
       <ArrowLeftIcon aria-hidden="true" class="subpost-arrow" />
       <div class="subpost-body">
         <div class="subpost-label">Previous Subpost</div>
@@ -21,7 +26,12 @@ const { prev, next } = Astro.props
     </a>
   )}
   {next && (
-    <a class="subpost-card next" href={next.href}>
+    <a
+      class="subpost-card next"
+      href={next.href}
+      data-nav-direction="next"
+      data-nav-post-title={next.title}
+    >
       <div class="subpost-body">
         <div class="subpost-label">Next Subpost</div>
         <div class="subpost-title">{next.title}</div>
@@ -30,6 +40,28 @@ const { prev, next } = Astro.props
     </a>
   )}
 </div>
+
+<script>
+  const handlePostNavClick = function (this: HTMLAnchorElement) {
+    if (!this.dataset.navPostTitle) return
+    window.posthog?.capture("post_navigation_clicked", {
+      direction: this.dataset.navDirection,
+      post_title: this.dataset.navPostTitle,
+    })
+  }
+
+  function setupPostNavTracking() {
+    document
+      .querySelectorAll<HTMLAnchorElement>("a[data-nav-direction]")
+      .forEach((link) => {
+        link.removeEventListener("click", handlePostNavClick)
+        link.addEventListener("click", handlePostNavClick)
+      })
+  }
+
+  setupPostNavTracking()
+  document.addEventListener("astro:page-load", setupPostNavTracking)
+</script>
 
 <style>
   .subpost-nav {

@@ -68,8 +68,8 @@
       ui_host: "https://us.posthog.com",
       defaults: "2026-05-30",
       person_profiles: "always",
-      // IMPORTANT: Use 'history_change' to automatically track pageviews during soft navigation
-      capture_pageview: "history_change",
+      // This site has no client-side router, so pageviews are captured on load
+      capture_pageview: true,
     })
   }
 </script>

@@ -12,6 +12,7 @@ const { links } = Astro.props
       <a
         href={href}
         data-icon-button
+        data-social-platform={label}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={label}
@@ -43,3 +44,23 @@ const { links } = Astro.props
     }
   }
 </style>
+
+<script>
+  const handleSocialLinkClick = function (this: HTMLAnchorElement) {
+    window.posthog?.capture("social_link_clicked", {
+      platform: this.dataset.socialPlatform,
+    })
+  }
+
+  function setupSocialIconsTracking() {
+    document
+      .querySelectorAll<HTMLAnchorElement>("a[data-social-platform]")
+      .forEach((link) => {
+        link.removeEventListener("click", handleSocialLinkClick)
+        link.addEventListener("click", handleSocialLinkClick)
+      })
+  }
+
+  setupSocialIconsTracking()
+  document.addEventListener("astro:page-load", setupSocialIconsTracking)
+</script>
