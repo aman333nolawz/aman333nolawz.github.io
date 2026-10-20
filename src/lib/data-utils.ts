@@ -1,28 +1,28 @@
-import { getCollection, render, type CollectionEntry } from 'astro:content'
-import { readingTime, calculateWordCountFromHtml } from '@/lib/utils'
+import { getCollection, render, type CollectionEntry } from "astro:content"
+import { readingTime, calculateWordCountFromHtml } from "@/lib/utils"
 
-export async function getAllAuthors(): Promise<CollectionEntry<'authors'>[]> {
-  return await getCollection('authors')
+export async function getAllAuthors(): Promise<CollectionEntry<"authors">[]> {
+  return await getCollection("authors")
 }
 
-export async function getAllPosts(): Promise<CollectionEntry<'blog'>[]> {
-  const posts = await getCollection('blog')
+export async function getAllPosts(): Promise<CollectionEntry<"blog">[]> {
+  const posts = await getCollection("blog")
   return posts
     .filter((post) => !post.data.draft && !isSubpost(post.id))
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 }
 
 export async function getAllPostsAndSubposts(): Promise<
-  CollectionEntry<'blog'>[]
+  CollectionEntry<"blog">[]
 > {
-  const posts = await getCollection('blog')
+  const posts = await getCollection("blog")
   return posts
     .filter((post) => !post.data.draft)
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 }
 
-export async function getAllProjects(): Promise<CollectionEntry<'projects'>[]> {
-  const projects = await getCollection('projects')
+export async function getAllProjects(): Promise<CollectionEntry<"projects">[]> {
+  const projects = await getCollection("projects")
   return projects.sort((a, b) => {
     const dateA = a.data.startDate?.getTime() || 0
     const dateB = b.data.startDate?.getTime() || 0
@@ -41,9 +41,9 @@ export async function getAllTags(): Promise<Map<string, number>> {
 }
 
 export async function getAdjacentPosts(currentId: string): Promise<{
-  newer: CollectionEntry<'blog'> | null
-  older: CollectionEntry<'blog'> | null
-  parent: CollectionEntry<'blog'> | null
+  newer: CollectionEntry<"blog"> | null
+  older: CollectionEntry<"blog"> | null
+  parent: CollectionEntry<"blog"> | null
 }> {
   const allPosts = await getAllPosts()
 
@@ -52,7 +52,7 @@ export async function getAdjacentPosts(currentId: string): Promise<{
     const allPosts = await getAllPosts()
     const parent = allPosts.find((post) => post.id === parentId) || null
 
-    const posts = await getCollection('blog')
+    const posts = await getCollection("blog")
     const subposts = posts
       .filter(
         (post) =>
@@ -101,21 +101,21 @@ export async function getAdjacentPosts(currentId: string): Promise<{
 
 export async function getPostsByAuthor(
   authorId: string,
-): Promise<CollectionEntry<'blog'>[]> {
+): Promise<CollectionEntry<"blog">[]> {
   const posts = await getAllPosts()
   return posts.filter((post) => post.data.authors?.includes(authorId))
 }
 
 export async function getPostsByTag(
   tag: string,
-): Promise<CollectionEntry<'blog'>[]> {
+): Promise<CollectionEntry<"blog">[]> {
   const posts = await getAllPosts()
   return posts.filter((post) => post.data.tags?.includes(tag))
 }
 
 export async function getRecentPosts(
   count: number,
-): Promise<CollectionEntry<'blog'>[]> {
+): Promise<CollectionEntry<"blog">[]> {
   const posts = await getAllPosts()
   return posts.slice(0, count)
 }
@@ -133,13 +133,13 @@ export async function getSortedTags(): Promise<
 }
 
 export function getParentId(subpostId: string): string {
-  return subpostId.split('/')[0]
+  return subpostId.split("/")[0]
 }
 
 export async function getSubpostsForParent(
   parentId: string,
-): Promise<CollectionEntry<'blog'>[]> {
-  const posts = await getCollection('blog')
+): Promise<CollectionEntry<"blog">[]> {
+  const posts = await getCollection("blog")
   return posts
     .filter(
       (post) =>
@@ -158,10 +158,10 @@ export async function getSubpostsForParent(
 }
 
 export function groupPostsByYear(
-  posts: CollectionEntry<'blog'>[],
-): Record<string, CollectionEntry<'blog'>[]> {
+  posts: CollectionEntry<"blog">[],
+): Record<string, CollectionEntry<"blog">[]> {
   return posts.reduce(
-    (acc: Record<string, CollectionEntry<'blog'>[]>, post) => {
+    (acc: Record<string, CollectionEntry<"blog">[]>, post) => {
       const year = post.data.date.getFullYear().toString()
       ;(acc[year] ??= []).push(post)
       return acc
@@ -176,12 +176,12 @@ export async function hasSubposts(postId: string): Promise<boolean> {
 }
 
 export function isSubpost(postId: string): boolean {
-  return postId.includes('/')
+  return postId.includes("/")
 }
 
 export async function getParentPost(
   subpostId: string,
-): Promise<CollectionEntry<'blog'> | null> {
+): Promise<CollectionEntry<"blog"> | null> {
   if (!isSubpost(subpostId)) {
     return null
   }
@@ -202,7 +202,7 @@ export async function parseAuthors(authorIds: string[] = []) {
     return {
       id,
       name: author?.data?.name || id,
-      avatar: author?.data?.avatar || '/static/logo.png',
+      avatar: author?.data?.avatar || "/static/logo.png",
       isRegistered: !!author,
     }
   })
@@ -210,7 +210,7 @@ export async function parseAuthors(authorIds: string[] = []) {
 
 export async function getPostById(
   postId: string,
-): Promise<CollectionEntry<'blog'> | null> {
+): Promise<CollectionEntry<"blog"> | null> {
   const allPosts = await getAllPostsAndSubposts()
   return allPosts.find((post) => post.id === postId) || null
 }
@@ -252,7 +252,7 @@ export type TOCHeading = {
 }
 
 export type TOCSection = {
-  type: 'parent' | 'subpost'
+  type: "parent" | "subpost"
   title: string
   headings: TOCHeading[]
   subpostId?: string
@@ -272,8 +272,8 @@ export async function getTOCSections(postId: string): Promise<TOCSection[]> {
   const { headings: parentHeadings } = await render(parentPost)
   if (parentHeadings.length > 0) {
     sections.push({
-      type: 'parent',
-      title: 'Overview',
+      type: "parent",
+      title: "Overview",
       headings: parentHeadings.map((heading) => ({
         slug: heading.slug,
         text: heading.text,
@@ -287,7 +287,7 @@ export async function getTOCSections(postId: string): Promise<TOCSection[]> {
     const { headings: subpostHeadings } = await render(subpost)
     if (subpostHeadings.length > 0) {
       sections.push({
-        type: 'subpost',
+        type: "subpost",
         title: subpost.data.title,
         headings: subpostHeadings.map((heading, index) => ({
           slug: heading.slug,

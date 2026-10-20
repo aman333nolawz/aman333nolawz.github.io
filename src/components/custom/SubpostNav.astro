@@ -1,0 +1,91 @@
+---
+import ArrowLeftIcon from "@/assets/icons/arrow-left.svg"
+import ArrowRightIcon from "@/assets/icons/arrow-right.svg"
+
+interface Props {
+  prev?: { title: string; href: string }
+  next?: { title: string; href: string }
+}
+
+const { prev, next } = Astro.props
+---
+
+<div class="subpost-nav">
+  {prev && (
+    <a class="subpost-card prev" href={prev.href}>
+      <ArrowLeftIcon aria-hidden="true" class="subpost-arrow" />
+      <div class="subpost-body">
+        <div class="subpost-label">Previous Subpost</div>
+        <div class="subpost-title">{prev.title}</div>
+      </div>
+    </a>
+  )}
+  {next && (
+    <a class="subpost-card next" href={next.href}>
+      <div class="subpost-body">
+        <div class="subpost-label">Next Subpost</div>
+        <div class="subpost-title">{next.title}</div>
+      </div>
+      <ArrowRightIcon aria-hidden="true" class="subpost-arrow" />
+    </a>
+  )}
+</div>
+
+<style>
+  .subpost-nav {
+    display: flex;
+    gap: var(--space-m);
+    margin-block-start: var(--space-l);
+  }
+
+  .subpost-card {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    flex: 1;
+    inline-size: 100%;
+    padding: var(--space-xs);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    background-color: transparent;
+    transition: background-color 200ms;
+
+    &:hover {
+      background-color: var(--muted);
+    }
+  }
+
+  .subpost-card.next {
+    justify-content: flex-end;
+  }
+
+  .subpost-arrow {
+    inline-size: 1rem;
+    block-size: 1rem;
+    color: var(--muted-foreground);
+    transition: transform 200ms;
+  }
+
+  .subpost-card.prev:hover > .subpost-arrow {
+    transform: translateX(calc(var(--space-3xs) * -1));
+  }
+
+  .subpost-card.next:hover > .subpost-arrow {
+    transform: translateX(var(--space-3xs));
+  }
+
+  .subpost-body {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+  }
+
+  .subpost-label {
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
+  }
+
+  .subpost-title {
+    font-weight: var(--font-weight-medium);
+  }
+</style>

@@ -1,70 +1,136 @@
 ---
-import BlogCard from '@/components/BlogCard.astro'
-import Link from '@/components/Link.astro'
-import PageHead from '@/components/PageHead.astro'
-import { buttonVariants } from '@/components/ui/button'
-import { SITE } from '@/consts'
-import Layout from '@/layouts/Layout.astro'
-import { getRecentPosts } from '@/lib/data-utils'
+import BlogCard from "@/components/BlogCard.astro"
+import MetaPage from "@/components/MetaPage.astro"
+import Layout from "@/layouts/Layout.astro"
+import { getPosts } from "@/lib/content"
 
-const blog = await getRecentPosts(SITE.featuredPostCount)
+const posts = (await getPosts()).slice(0, 2)
 ---
 
-<Layout class="max-w-3xl">
-  <PageHead slot="head" title="Home" />
-  <section>
-    <div class="rounded-lg border">
-      <div class="flex flex-col space-y-1.5 p-6">
-        <h3 class="font-mono text-3xl leading-none font-medium">
-          re·bell·ious
-        </h3>
-        <p class="text-muted-foreground text-sm">
-          /rɪˈbɛljəs/ &bull; <span class="font-medium">adjective</span>
-        </p>
-      </div>
-      <div class="p-6 pt-0">
-        <p class="text-muted-foreground mb-2 text-sm">
-          Showing a desire to resist authority, control, or convention.
-        </p>
-      </div>
-    </div>
-  </section>
-  <section class="flex flex-col gap-y-4">
-    <h2 class="text-2xl font-medium">Latest posts</h2>
-    <ul class="flex flex-col gap-y-4">
-      {
-        blog.map((post) => (
-          <li>
-            <BlogCard entry={post} />
-          </li>
-        ))
-      }
+<Layout>
+  <MetaPage slot="head" title="Home" />
+
+  <div class="dictionary-entry">
+    <header>
+      <h1>re·bell·ious</h1>
+      <p class="pronunciation">
+        /rɪˈbɛljəs/ &bull; <span class="part-of-speech">adjective</span>
+      </p>
+    </header>
+    <p class="definition">
+      Showing a desire to resist authority, control, or convention.
+    </p>
+  </div>
+
+  <section class="latest-posts">
+    <h2>Latest posts</h2>
+    <ul>
+      {posts.map((post) => <BlogCard post={post} />)}
     </ul>
-    <div class="flex justify-center">
-      <Link
-        href="/blog"
-        id="see-all-posts"
-        class={buttonVariants({ variant: 'ghost' }) + ' group'}
-      >
-        See all posts <span
-          class="ml-1.5 transition-transform group-hover:translate-x-1"
-          >&rarr;</span
-        >
-      </Link>
+    <div class="see-all">
+      <a href="/blog" id="see-all-posts">
+        See all posts <span class="arrow">&rarr;</span>
+      </a>
     </div>
   </section>
 </Layout>
 
 <script>
-  function setupSeeAllPostsTracking() {
-    const link = document.getElementById('see-all-posts')
-    link?.removeEventListener('click', handleSeeAllPostsClick)
-    link?.addEventListener('click', handleSeeAllPostsClick)
-  }
-
   function handleSeeAllPostsClick() {
-    window.posthog?.capture('see_all_posts_clicked')
+    window.posthog?.capture("see_all_posts_clicked")
   }
 
-  document.addEventListener('astro:page-load', setupSeeAllPostsTracking)
+  function setupSeeAllPostsTracking() {
+    const link = document.getElementById("see-all-posts")
+    if (!link) return
+    link.removeEventListener("click", handleSeeAllPostsClick)
+    link.addEventListener("click", handleSeeAllPostsClick)
+  }
+
+  setupSeeAllPostsTracking()
+  document.addEventListener("astro:page-load", setupSeeAllPostsTracking)
 </script>
+
+<style>
+  .dictionary-entry {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-m);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .dictionary-entry h1 {
+    font-family: var(--font-mono);
+    font-size: var(--step-3);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .pronunciation {
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
+    margin: 0;
+  }
+
+  .part-of-speech {
+    font-weight: var(--font-weight-medium);
+  }
+
+  .definition {
+    color: var(--muted-foreground);
+    margin: 0;
+  }
+
+  .latest-posts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    margin-block-start: var(--space-l);
+  }
+
+  .latest-posts h2 {
+    font-size: var(--step-2);
+    font-weight: var(--font-weight-medium);
+    margin: 0;
+  }
+
+  .latest-posts ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
+  .see-all {
+    display: flex;
+    justify-content: center;
+    margin-block-start: var(--space-s);
+  }
+
+  #see-all-posts {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    padding: var(--space-2xs) var(--space-s);
+    border-radius: var(--radius-md);
+  }
+
+  #see-all-posts:hover {
+    background: var(--muted);
+  }
+
+  .arrow {
+    margin-inline-start: var(--space-3xs);
+    transition: transform 150ms ease;
+  }
+
+  #see-all-posts:hover .arrow {
+    transform: translateX(0.25rem);
+  }
+</style>

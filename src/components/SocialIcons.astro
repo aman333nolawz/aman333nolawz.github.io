@@ -1,57 +1,45 @@
 ---
-import Link from '@/components/Link.astro'
-import { buttonVariants } from '@/components/ui/button'
-import { ICON_MAP } from '@/consts'
-import type { SocialLink } from '@/types'
-import { Icon } from 'astro-icon/components'
+import type { SvgComponent } from "astro/types"
 
-interface Props {
-  links: SocialLink[]
-}
+type Props = { links: { href: string; label: string; icon: SvgComponent }[] }
 
 const { links } = Astro.props
 ---
 
-<ul class="flex flex-wrap gap-2" role="list">
-  {
-    links.map(({ href, label }) => (
-      <li>
-        <Link
-          href={href}
-          aria-label={label}
-          title={label}
-          class={buttonVariants({ variant: 'outline', size: 'icon' })}
-          external
-          data-social-platform={label}
-        >
-          <Icon
-            name={
-              ICON_MAP[label as keyof typeof ICON_MAP] ||
-              'lucide:message-circle-question'
-            }
-            class="size-4"
-          />
-        </Link>
-      </li>
-    ))
-  }
+<ul>
+  {links.map(({ href, label, icon: Icon }) => (
+    <li>
+      <a
+        href={href}
+        data-icon-button
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={label}
+        title={label}
+      >
+        <Icon aria-hidden="true" />
+      </a>
+    </li>
+  ))}
 </ul>
 
-<script>
-  function setupSocialIconsTracking() {
-    document
-      .querySelectorAll<HTMLAnchorElement>('a[data-social-platform]')
-      .forEach((link) => {
-        link.removeEventListener('click', handleSocialLinkClick)
-        link.addEventListener('click', handleSocialLinkClick)
-      })
-  }
+<style>
+  ul {
+    display: flex;
+    margin-inline: -0.5rem;
 
-  function handleSocialLinkClick(this: HTMLAnchorElement) {
-    window.posthog?.capture('social_link_clicked', {
-      platform: this.dataset.socialPlatform,
-    })
-  }
+    li a {
+      color: var(--muted-foreground);
+      text-decoration: none;
 
-  document.addEventListener('astro:page-load', setupSocialIconsTracking)
-</script>
+      &:hover {
+        color: var(--foreground);
+      }
+
+      svg {
+        width: 1.125rem;
+        height: 1.125rem;
+      }
+    }
+  }
+</style>

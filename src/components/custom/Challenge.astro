@@ -1,9 +1,12 @@
 ---
-import Badge from '@/components/Badge.astro'
-import Link from '@/components/Link.astro'
-import AvatarComponent from '@/components/ui/avatar'
-import { Badge as BadgeComponent } from '@/components/ui/badge'
-import { Icon } from 'astro-icon/components'
+import CircleCheckIcon from "@/assets/icons/circle-check.svg"
+import FileTextIcon from "@/assets/icons/file-text.svg"
+import FlagIcon from "@/assets/icons/flag.svg"
+import PenToolIcon from "@/assets/icons/pen-tool.svg"
+import StarIcon from "@/assets/icons/star.svg"
+import TagIcon from "@/assets/icons/tag.svg"
+import TerminalIcon from "@/assets/icons/terminal.svg"
+import UsersIcon from "@/assets/icons/users.svg"
 
 interface Solver {
   avatar?: string
@@ -42,160 +45,280 @@ const categories = Array.isArray(category)
     : []
 ---
 
-<div class="mx-auto flex flex-col gap-y-4 border p-4">
-  {
-    title && (
-      <h3 class="not-prose text-foreground text-xl font-medium">{title}</h3>
-    )
-  }
-  <dl class="not-prose flex flex-col divide-y">
-    {
-      solvers.length > 0 && (
-        <div class="flex flex-wrap items-center gap-x-4 py-2 first:pt-0 last:pb-0">
-          <dt class="text-muted-foreground flex flex-1 items-center gap-x-2 text-xs font-medium">
-            <Icon name="lucide:users" class="size-4" />
-            {solvers.length > 1 ? 'Solvers' : 'Solver'}
-          </dt>
-          <dd class="flex flex-1 flex-wrap gap-y-2">
-            {solvers.map((solver, index) => (
-              <div class="flex items-center">
-                {solver.href ? (
-                  <Link
-                    href={solver.href}
-                    class="flex items-center gap-x-1"
-                    underline
-                  >
-                    <AvatarComponent
-                      client:load
-                      src={solver.avatar || '/static/logo.webp'}
-                      alt={`${solver.name}'s avatar`}
-                      fallback={solver.name[0]}
-                      className="size-4 rounded-full"
-                    />
-                    <span class="text-foreground text-xs">{solver.name}</span>
-                  </Link>
-                ) : (
-                  <div class="flex items-center gap-x-1">
-                    <AvatarComponent
-                      client:load
-                      src={solver.avatar || '/static/logo.webp'}
-                      alt={`${solver.name}'s avatar`}
-                      fallback={solver.name[0]}
-                      className="size-4 rounded-full"
-                    />
-                    <span class="text-foreground text-xs">{solver.name}</span>
-                  </div>
-                )}
-                {index < solvers.length - 1 && (
-                  <span class="mr-1 text-xs">,</span>
-                )}
-              </div>
-            ))}
-          </dd>
-        </div>
-      )
-    }
-    {
-      authors.length > 0 && (
-        <div class="flex flex-wrap items-center gap-x-4 py-2">
-          <dt class="text-muted-foreground flex flex-1 items-center gap-x-2 text-xs font-medium">
-            <Icon name="lucide:pen-tool" class="size-4" />
-            {authors.length > 1 ? 'Authors' : 'Author'}
-          </dt>
-          <dd class="flex-1 text-xs">{authors.join(', ')}</dd>
-        </div>
-      )
-    }
-    {
-      categories.length > 0 && (
-        <div class="flex flex-wrap items-center gap-x-4 py-2">
-          <dt class="text-muted-foreground flex flex-1 items-center gap-x-2 text-xs font-medium">
-            <Icon name="lucide:tag" class="size-4" />
-            {categories.length > 1 ? 'Categories' : 'Category'}
-          </dt>
-          <dd class="flex flex-1 flex-wrap gap-2">
-            {categories.map((cat) => (
-              <Badge text={cat} />
-            ))}
-          </dd>
-        </div>
-      )
-    }
-    {
-      points !== undefined && (
-        <div class="flex flex-wrap items-center gap-x-4 py-2">
-          <dt class="text-muted-foreground flex flex-1 items-center gap-x-2 text-xs font-medium">
-            <Icon name="lucide:star" class="size-4" />
-            Points
-          </dt>
-          <dd class="flex-1 text-xs">{points}</dd>
-        </div>
-      )
-    }
-    {
-      solves !== undefined && (
-        <div class="flex flex-wrap items-center gap-x-4 py-2">
-          <dt class="text-muted-foreground flex flex-1 items-center gap-x-2 text-xs font-medium">
-            <Icon name="lucide:check-circle" class="size-4" />
-            Solves
-          </dt>
-          <dd class="flex-1 text-xs">{solves}</dd>
-        </div>
-      )
-    }
-    {
-      files.length > 0 && (
-        <div class="flex flex-wrap items-center gap-x-4 py-2">
-          <dt class="text-muted-foreground flex flex-1 items-center gap-x-2 text-xs font-medium">
-            <Icon name="lucide:file-text" class="size-4" />
-            Files
-          </dt>
-          <dd class="flex flex-1 flex-wrap gap-2">
-            {files.map((file) => (
-              <BadgeComponent
-                variant="secondary"
-                className="flex items-center gap-x-1"
-              >
-                <Icon name="lucide:file-text" class="size-3" />
-                {file}
-              </BadgeComponent>
-            ))}
-          </dd>
-        </div>
-      )
-    }
-    {
-      remote && (
-        <div class="flex flex-wrap items-center gap-x-4 py-2">
-          <dt class="text-muted-foreground flex flex-1 items-center gap-x-2 text-xs font-medium">
-            <Icon name="lucide:terminal" class="size-4" />
-            Remote
-          </dt>
-          <dd class="flex-1 text-xs">
-            <code class="bg-muted text-foreground relative border px-[0.3rem] py-[0.2rem] text-xs font-medium break-words">
-              {remote}
-            </code>
-          </dd>
-        </div>
-      )
-    }
-    {
-      flag && (
-        <div class="flex flex-wrap items-center gap-x-4 py-2">
-          <dt class="text-muted-foreground flex flex-1 items-center gap-x-2 text-xs font-medium">
-            <Icon name="lucide:flag" class="size-4" />
-            Flag
-          </dt>
-          <dd class="flex-1 text-xs">
-            <code class="bg-muted text-foreground relative cursor-pointer border px-[0.3rem] py-[0.2rem] text-xs font-medium break-all blur-xs transition-all duration-200 select-all hover:blur-none">
-              {flag}
-            </code>
-          </dd>
-        </div>
-      )
-    }
+<div class="challenge">
+  {title && <h3 class="not-prose challenge-title">{title}</h3>}
+  <dl class="not-prose challenge-data">
+    {solvers.length > 0 && (
+      <div class="challenge-row">
+        <dt class="challenge-label">
+          <UsersIcon aria-hidden="true" />
+          {solvers.length > 1 ? "Solvers" : "Solver"}
+        </dt>
+        <dd class="challenge-solvers">
+          {solvers.map((solver, index) => (
+            <div class="challenge-solver">
+              {solver.href ? (
+                <a class="challenge-solver-link" href={solver.href}>
+                  <img
+                    class="challenge-avatar"
+                    src={solver.avatar || "/static/logo.webp"}
+                    alt={`${solver.name}'s avatar`}
+                  />
+                  <span>{solver.name}</span>
+                </a>
+              ) : (
+                <>
+                  <img
+                    class="challenge-avatar"
+                    src={solver.avatar || "/static/logo.webp"}
+                    alt={`${solver.name}'s avatar`}
+                  />
+                  <span>{solver.name}</span>
+                </>
+              )}
+              {index < solvers.length - 1 && (
+                <span class="challenge-sep">,</span>
+              )}
+            </div>
+          ))}
+        </dd>
+      </div>
+    )}
+    {authors.length > 0 && (
+      <div class="challenge-row">
+        <dt class="challenge-label">
+          <PenToolIcon aria-hidden="true" />
+          {authors.length > 1 ? "Authors" : "Author"}
+        </dt>
+        <dd>{authors.join(", ")}</dd>
+      </div>
+    )}
+    {categories.length > 0 && (
+      <div class="challenge-row">
+        <dt class="challenge-label">
+          <TagIcon aria-hidden="true" />
+          {categories.length > 1 ? "Categories" : "Category"}
+        </dt>
+        <dd class="challenge-chips">
+          {categories.map((cat) => (
+            <span class="challenge-chip">{cat}</span>
+          ))}
+        </dd>
+      </div>
+    )}
+    {points !== undefined && (
+      <div class="challenge-row">
+        <dt class="challenge-label">
+          <StarIcon aria-hidden="true" />
+          Points
+        </dt>
+        <dd>{points}</dd>
+      </div>
+    )}
+    {solves !== undefined && (
+      <div class="challenge-row">
+        <dt class="challenge-label">
+          <CircleCheckIcon aria-hidden="true" />
+          Solves
+        </dt>
+        <dd>{solves}</dd>
+      </div>
+    )}
+    {files.length > 0 && (
+      <div class="challenge-row">
+        <dt class="challenge-label">
+          <FileTextIcon aria-hidden="true" />
+          Files
+        </dt>
+        <dd class="challenge-chips">
+          {files.map((file) => (
+            <span class="challenge-chip">
+              <FileTextIcon aria-hidden="true" class="_small" />
+              {file}
+            </span>
+          ))}
+        </dd>
+      </div>
+    )}
+    {remote && (
+      <div class="challenge-row">
+        <dt class="challenge-label">
+          <TerminalIcon aria-hidden="true" />
+          Remote
+        </dt>
+        <dd>
+          <code class="challenge-code">{remote}</code>
+        </dd>
+      </div>
+    )}
+    {flag && (
+      <div class="challenge-row">
+        <dt class="challenge-label">
+          <FlagIcon aria-hidden="true" />
+          Flag
+        </dt>
+        <dd>
+          <code class="challenge-code challenge-flag">{flag}</code>
+        </dd>
+      </div>
+    )}
   </dl>
   <section class="fix-margin small">
     <slot />
   </section>
 </div>
+
+<style>
+  .challenge {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    margin-inline: auto;
+    padding: var(--space-s);
+    border: 1px solid var(--border);
+  }
+
+  .challenge-title {
+    font-size: var(--step-1);
+    font-weight: var(--font-weight-medium);
+    color: var(--foreground);
+  }
+
+  .challenge-data {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .challenge-data > * + * {
+    border-block-start: 1px solid var(--border);
+  }
+
+  .challenge-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3xs) var(--space-s);
+    padding-block: var(--space-2xs);
+  }
+
+  .challenge-row:first-child {
+    padding-block-start: 0;
+  }
+
+  .challenge-row:last-child {
+    padding-block-end: 0;
+  }
+
+  .challenge-label {
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    color: var(--muted-foreground);
+
+    svg {
+      inline-size: 1em;
+      block-size: 1em;
+    }
+  }
+
+  dd {
+    flex: 1 1 0;
+    min-width: 0;
+    font-size: var(--step--1);
+    color: var(--foreground);
+  }
+
+  .challenge-solvers {
+    display: flex;
+    flex: 1 1 0;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .challenge-solver {
+    display: flex;
+    align-items: center;
+    font-size: var(--step--1);
+    color: var(--foreground);
+  }
+
+  .challenge-solver-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    color: var(--foreground);
+    text-decoration: underline;
+    text-decoration-color: var(--muted-foreground);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 300ms ease-in-out;
+
+    &:hover {
+      text-decoration-color: var(--foreground);
+    }
+  }
+
+  .challenge-avatar {
+    inline-size: 1rem;
+    block-size: 1rem;
+    border-radius: var(--radius-full);
+    object-fit: cover;
+  }
+
+  .challenge-sep {
+    margin-inline-end: var(--space-3xs);
+  }
+
+  .challenge-chips {
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .challenge-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    min-width: 0;
+    max-width: 100%;
+    padding-inline: var(--space-3xs);
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
+    background-color: color-mix(in oklab, var(--muted) 50%, transparent);
+    border-radius: var(--radius-full);
+    overflow-wrap: anywhere;
+
+    svg {
+      inline-size: 0.75em;
+      block-size: 0.75em;
+    }
+  }
+
+  .challenge-code {
+    padding: 0.2rem 0.3rem;
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    color: var(--foreground);
+    background-color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow-wrap: break-word;
+  }
+
+  .challenge-flag {
+    cursor: pointer;
+    overflow-wrap: anywhere;
+    filter: blur(2px);
+    user-select: all;
+    transition: filter 200ms;
+
+    &:hover {
+      filter: blur(0);
+    }
+  }
+</style>

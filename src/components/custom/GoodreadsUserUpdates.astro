@@ -1,7 +1,7 @@
 ---
-import { getCollection } from 'astro:content'
-import { Icon } from 'astro-icon/components'
-import { Image } from 'astro:assets'
+import { getCollection } from "astro:content"
+import { Image } from "astro:assets"
+import GoodreadsIcon from "./GoodreadsIcon.astro"
 
 interface Props {
   collection?: string
@@ -10,10 +10,41 @@ interface Props {
   className?: string
 }
 
-const { limit = 10, showTypes, className = '' } = Astro.props
+const { limit = 10, showTypes, className = "" } = Astro.props
+
+interface ItemData {
+  type: string
+  bookUrl?: string
+  bookTitle?: string
+  bookAuthor?: string
+  bookImgUrl?: string
+  userUrl?: string
+  readingStatus?: string
+  percentRead?: number
+  rating?: number
+  reviewUrl?: string
+  reviewUser?: string
+  authorId?: string
+  statusUrl?: string
+  statusUser?: string
+  comment?: string
+  readStatusUser?: string
+  readStatusUserImgUrl?: string
+}
+
+interface UpdateData {
+  id: string
+  title: string
+  link: string
+  description: string
+  pubDate: Date
+  itemData?: ItemData
+}
 
 // Get the updates from the content collection
-const allUpdates = await getCollection('goodreads_user_updates')
+const allUpdates = (await getCollection(
+  "goodreads_user_updates",
+)) as unknown as { data: UpdateData }[]
 
 // Sort updates by publication date (newest first)
 const sortedUpdates = allUpdates.sort(
@@ -25,7 +56,8 @@ const sortedUpdates = allUpdates.sort(
 const filteredUpdates = showTypes
   ? sortedUpdates.filter(
       (update) =>
-        update.data.itemData && showTypes.includes(update.data.itemData.type),
+        update.data.itemData &&
+        showTypes.some((showType) => showType === update.data.itemData?.type),
     )
   : sortedUpdates
 
@@ -34,559 +66,817 @@ const updates = filteredUpdates.slice(0, limit)
 
 // Format date to a more readable format
 const formatDate = (dateString: string) => {
+  if (!dateString) {
+    return ""
+  }
   const date = new Date(dateString)
   const day = date.getDate()
-  const month = date.toLocaleString('default', { month: 'long' })
+  const month = date.toLocaleString("default", { month: "long" })
   const year = date.getFullYear()
-  const time = date.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: 'numeric',
+  const time = date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
     hour12: true,
   })
   return `${day} ${month}, ${year} at ${time}`
 }
 ---
 
+<div class={`goodreads-updates ${className}`}>
+  <div class="updates-container">
+    {updates.length === 0 ? (
+      <div class="goodreads-empty">
+        <p>No recent updates found.</p>
+      </div>
+    ) : (
+      updates.map((update) => {
+        const itemData = update.data.itemData
+        const date = formatDate(update.data.pubDate.toString())
+        const goodreadsLink = update.data.link || "#"
+
+        return (
+          <div
+            class="update-item"
+            data-pub-date={update.data.pubDate.toString()}
+          >
+            <div class="update-header">
+              <a href={goodreadsLink} class="update-time">
+                <span class="update-time-inner">
+                  <span id={`time-ago-${update.id}`}>Some days ago</span>
+                </span>
+                <span class="update-time-tip">{date}</span>
+              </a>
+              {itemData && itemData.type && (
+                <span class="goodreads-badge">
+                  {(() => {
+                    let typeAbbreviation = ""
+                    let icon = "info"
+
+                    switch (itemData.type) {
+                      case "ReadStatus":
+                        typeAbbreviation = "Updates"
+                        icon = "bookcopy"
+                        break
+                      case "Review":
+                        typeAbbreviation = "Review"
+                        icon = "star"
+                        break
+                      case "UserStatus":
+                        typeAbbreviation = "Reading"
+                        icon = "bookopen"
+                        break
+                      case "CommentReview":
+                      case "CommentStatus":
+                        typeAbbreviation = "Comment"
+                        icon = "messagesquare"
+                        break
+                      case "LikeReview":
+                      case "LikeReadStatus":
+                        typeAbbreviation = "Like"
+                        icon = "heart"
+                        break
+                      case "AuthorFollowing":
+                        typeAbbreviation = "Follow"
+                        icon = "userplus"
+                        break
+                      default:
+                        typeAbbreviation = "..."
+                        icon = "info"
+                    }
+
+                    return (
+                      <>
+                        <GoodreadsIcon
+                          name={icon}
+                          class={`goodreads-badge-icon${itemData.type === "Review" ? " goodreads-badge-icon-review" : ""}`}
+                        />{" "}
+                        {typeAbbreviation}
+                      </>
+                    )
+                  })()}
+                </span>
+              )}
+            </div>
+
+            {/* ReadStatus: started reading, wants to read, finished reading */}
+            {itemData?.type === "ReadStatus" && (
+              <div class="update-row update-row-start">
+                <a href={itemData.bookUrl} class="update-cover">
+                  <div class="book-cover">
+                    <div
+                      class="glashboard-placeholder"
+                      id={`placeholder-${itemData.bookTitle}`}
+                    >
+                      <div class="glashboard-placeholder-inner">
+                        <GoodreadsIcon
+                          name="image"
+                          class="glashboard-placeholder-icon"
+                        />
+                      </div>
+                    </div>
+                    <Image
+                      src={(itemData.bookImgUrl as string).replace(
+                        "_SY75_",
+                        "_SY175_",
+                      )}
+                      alt={`Cover of ${itemData.bookTitle}`}
+                      class="zoomable-image"
+                      title={`${itemData.bookTitle}`}
+                      width={78}
+                      height={117}
+                      onload={`document.getElementById('placeholder-${itemData.bookTitle}').classList.add('hidden'); this.classList.add('loaded');`}
+                    />
+                  </div>
+                </a>
+                <div>
+                  <p class="goodreads-user-updates">
+                    <a
+                      href={itemData.userUrl}
+                      class="goodreads-button goodreads-strong"
+                    >
+                      <GoodreadsIcon
+                        name="user"
+                        class="goodreads-button-icon"
+                      />
+                      {update.data.title.split(" ")[0]}
+                    </a>
+                    {itemData.readingStatus || "is reading"}
+                    <br class="goodreads-br-lg" />
+                    <a href={itemData.bookUrl} class="goodreads-button">
+                      <GoodreadsIcon
+                        name="book"
+                        class="goodreads-button-icon"
+                      />
+                      <span class="goodreads-inline">{itemData.bookTitle}</span>
+                    </a>
+                  </p>
+                  {itemData.readingStatus === "finished reading" ? (
+                    <div class="goodreads-progress">
+                      <div class="glashboard-progress-track">
+                        <div
+                          class="glashboard-progress-fill"
+                          style={`width: 100%`}
+                        />
+                      </div>
+                      <span class="goodreads-progress-label">100%</span>
+                    </div>
+                  ) : (
+                    <div class="goodreads-progress">
+                      <div class="glashboard-progress-track">
+                        <div
+                          class="glashboard-progress-fill"
+                          style={`width: 0%`}
+                        />
+                      </div>
+                      <span class="goodreads-progress-label">0%</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Review: rated a book */}
+            {itemData?.type === "Review" && (
+              <div class="update-row">
+                <a href={itemData.bookUrl} class="update-cover">
+                  <div class="book-cover">
+                    <div
+                      class="glashboard-placeholder"
+                      id={`placeholder-${itemData.bookTitle}`}
+                    >
+                      <div class="glashboard-placeholder-inner">
+                        <GoodreadsIcon
+                          name="image"
+                          class="glashboard-placeholder-icon"
+                        />
+                      </div>
+                    </div>
+                    <Image
+                      src={(itemData.bookImgUrl as string).replace(
+                        "_SY75_",
+                        "_SY175_",
+                      )}
+                      alt={`Cover of ${itemData.bookTitle}`}
+                      class="zoomable-image"
+                      title={`${itemData.bookTitle}`}
+                      width={78}
+                      height={117}
+                      onload={`document.getElementById('placeholder-${itemData.bookTitle}').classList.add('hidden'); this.classList.add('loaded');`}
+                    />
+                  </div>
+                </a>
+                <div>
+                  <p class="goodreads-user-updates-sm">
+                    <a href={itemData.userUrl} class="goodreads-button">
+                      <GoodreadsIcon
+                        name="user"
+                        class="goodreads-button-icon"
+                      />
+                      <span class="goodreads-strong">
+                        {update.data.title.split(" ")[0]}
+                      </span>
+                    </a>
+                    rated <br class="goodreads-br-inline" />
+                    <a href={itemData.bookUrl} class="goodreads-button">
+                      <GoodreadsIcon
+                        name="book"
+                        class="goodreads-button-icon"
+                      />
+                      {itemData.bookTitle}
+                    </a>
+                    by {itemData.bookAuthor}
+                    <br class="goodreads-br-lg" />
+                    <a href={goodreadsLink} class="goodreads-button">
+                      <GoodreadsIcon
+                        name="star"
+                        class="goodreads-button-icon"
+                      />
+                      <span class="goodreads-strong">
+                        {itemData.rating}/5 stars
+                      </span>
+                    </a>
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* UserStatus: reading progress */}
+            {itemData?.type === "UserStatus" && (
+              <div class="update-row update-row-mt3">
+                <a href={itemData.bookUrl} class="update-cover">
+                  <div class="book-cover">
+                    <div
+                      class="glashboard-placeholder"
+                      id={`placeholder-${itemData.bookTitle}`}
+                    >
+                      <div class="glashboard-placeholder-inner">
+                        <GoodreadsIcon
+                          name="image"
+                          class="glashboard-placeholder-icon"
+                        />
+                      </div>
+                    </div>
+                    <Image
+                      src={(itemData.bookImgUrl as string).replace(
+                        "_SY75_",
+                        "_SY175_",
+                      )}
+                      alt={`Cover of ${itemData.bookTitle}`}
+                      class="zoomable-image"
+                      title={`${itemData.bookTitle}`}
+                      width={78}
+                      height={117}
+                      onload={`document.getElementById('placeholder-${itemData.bookTitle}').classList.add('hidden'); this.classList.add('loaded');`}
+                    />
+                  </div>
+                </a>
+                <div>
+                  <p class="goodreads-user-updates">
+                    <a href={itemData.userUrl} class="goodreads-button">
+                      <GoodreadsIcon
+                        name="user"
+                        class="goodreads-button-icon"
+                      />
+                      <span class="goodreads-strong">Aman</span>
+                    </a>
+                    is
+                    <span class="goodreads-strong">
+                      {itemData.percentRead
+                        ? `${itemData.percentRead}%`
+                        : "reading"}
+                    </span>
+                    through
+                    <br class="goodreads-br-lg" />
+                    <a href={itemData.bookUrl} class="goodreads-button">
+                      <GoodreadsIcon
+                        name="book"
+                        class="goodreads-button-icon"
+                      />
+                      {itemData.bookTitle}
+                    </a>
+                    by {itemData.bookAuthor}
+                  </p>
+                  {itemData.percentRead && (
+                    <div class="goodreads-progress">
+                      <div class="glashboard-progress-track">
+                        <div
+                          class="glashboard-progress-fill"
+                          style={`width: ${itemData.percentRead}%`}
+                        />
+                      </div>
+                      <span class="goodreads-progress-label">
+                        {itemData.percentRead}%
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* CommentReview: commented on a review */}
+            {itemData?.type === "CommentReview" && (
+              <div>
+                <p class="goodreads-user-updates">
+                  <a
+                    href={itemData.userUrl}
+                    class="goodreads-button goodreads-strong"
+                  >
+                    <GoodreadsIcon name="user" class="goodreads-button-icon" />
+                    <span class="goodreads-inline">
+                      {update.data.title.split(" ")[0]}
+                    </span>
+                  </a>
+                  commented on
+                  <br class="goodreads-br-lg" />
+                  <a href={itemData.reviewUrl} class="goodreads-button">
+                    <GoodreadsIcon
+                      name="bookcheck"
+                      class="goodreads-button-icon"
+                    />
+                    <span class="goodreads-inline">{itemData.reviewUser}</span>
+                    's review
+                  </a>{" "}
+                  of <br class="goodreads-br-lg" />
+                  <a href={itemData.bookUrl} class="goodreads-button">
+                    <GoodreadsIcon name="book" class="goodreads-button-icon" />
+                    <span class="goodreads-inline">{itemData.bookTitle}</span>
+                  </a>
+                </p>
+                <div class="update-row update-row-mt2 update-row-start">
+                  {itemData.userUrl && (
+                    <img
+                      src="/static/profile.jpg"
+                      alt={`${itemData.userUrl}'s profile`}
+                      class="goodreads-avatar"
+                    />
+                  )}
+                  <div class="bookmark-bubble">{itemData.comment}</div>
+                </div>
+              </div>
+            )}
+
+            {/* LikeReview: liked someone's review */}
+            {itemData?.type === "LikeReview" && (
+              <div class="update-row update-row-start">
+                <a href={itemData.bookUrl} class="update-cover">
+                  <div class="book-cover">
+                    <div
+                      class="glashboard-placeholder"
+                      id={`placeholder-${itemData.bookTitle}`}
+                    >
+                      <div class="glashboard-placeholder-inner">
+                        <GoodreadsIcon
+                          name="image"
+                          class="glashboard-placeholder-icon"
+                        />
+                      </div>
+                    </div>
+                    <Image
+                      src={(itemData.bookImgUrl as string).replace(
+                        "_SY75_",
+                        "_SY175_",
+                      )}
+                      alt={`Cover of ${itemData.bookTitle}`}
+                      class="zoomable-image"
+                      title={`${itemData.bookTitle}`}
+                      width={78}
+                      height={117}
+                      onload={`document.getElementById('placeholder-${itemData.bookTitle}').classList.add('hidden'); this.classList.add('loaded');`}
+                    />
+                  </div>
+                </a>
+                <div>
+                  <p class="goodreads-user-updates">
+                    <a
+                      href={itemData.userUrl}
+                      class="goodreads-button goodreads-strong"
+                    >
+                      <GoodreadsIcon
+                        name="user"
+                        class="goodreads-button-icon"
+                      />
+                      {update.data.title.split(" ")[0]}
+                    </a>
+                    liked
+                    <a href={itemData.reviewUrl} class="goodreads-plain-link">
+                      {itemData.reviewUser}'s review
+                    </a>{" "}
+                    of{" "}
+                    <a href={itemData.bookUrl} class="goodreads-plain-link">
+                      {itemData.bookTitle}
+                    </a>
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* AuthorFollowing: followed an author */}
+            {itemData?.type === "AuthorFollowing" && (
+              <div>
+                <p class="goodreads-user-updates">
+                  <a
+                    href={itemData.userUrl}
+                    class="goodreads-button goodreads-strong"
+                  >
+                    <GoodreadsIcon name="user" class="goodreads-button-icon" />
+                    {update.data.title.split(" ")[0]}
+                  </a>
+                  started following author
+                  <a
+                    href={`https://www.goodreads.com/author/show/${itemData.authorId}`}
+                    class="goodreads-button"
+                  >
+                    <GoodreadsIcon name="book" class="goodreads-button-icon" />
+                    <span class="goodreads-inline">
+                      {update.data.title.replace("is now following", "").trim()}
+                    </span>
+                  </a>
+                </p>
+              </div>
+            )}
+
+            {/* CommentStatus: commented on a status */}
+            {itemData?.type === "CommentStatus" && (
+              <div>
+                <p class="goodreads-user-updates">
+                  <a
+                    href={itemData.userUrl}
+                    class="goodreads-button goodreads-strong"
+                  >
+                    <GoodreadsIcon name="user" class="goodreads-button-icon" />
+                    {update.data.title.split(" ")[0]}
+                  </a>
+                  commented on
+                  <a href={itemData.statusUrl} class="goodreads-button">
+                    <GoodreadsIcon
+                      name="messagesquare"
+                      class="goodreads-button-icon"
+                    />
+                    {itemData.statusUser}'s status
+                  </a>
+                </p>
+                <div class="update-row update-row-mt2 update-row-start">
+                  {itemData.userUrl && (
+                    <img
+                      src="/static/profile.jpg"
+                      alt={`${itemData.userUrl}'s profile`}
+                      class="goodreads-avatar"
+                    />
+                  )}
+                  <div class="bookmark-bubble">{itemData.comment}</div>
+                </div>
+              </div>
+            )}
+
+            {/* LikeReadStatus: liked someone's read status */}
+            {itemData?.type === "LikeReadStatus" && (
+              <div>
+                <p class="goodreads-user-updates">
+                  <a
+                    href={itemData.userUrl}
+                    class="goodreads-button goodreads-strong"
+                  >
+                    <GoodreadsIcon name="user" class="goodreads-button-icon" />
+                    {update.data.title.split(" ")[0]}
+                  </a>
+                  liked
+                  {itemData.readStatusUser}'s status update:
+                </p>
+                <div class="update-row update-row-mt2 update-row-start">
+                  {itemData.readStatusUserImgUrl && (
+                    <img
+                      src={itemData.readStatusUserImgUrl}
+                      alt={`${itemData.readStatusUser}'s profile`}
+                      class="goodreads-avatar goodreads-avatar-square"
+                    />
+                  )}
+                  <div class="bookmark-bubble bookmark-bubble-italic">
+                    {itemData.readStatusUser} {itemData.readStatus}
+                    <br class="goodreads-br-lg" />
+                    <a href={itemData.bookUrl} class="goodreads-button">
+                      <GoodreadsIcon
+                        name="book"
+                        class="goodreads-button-icon"
+                      />
+                      <span class="goodreads-inline">{itemData.bookTitle}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Fallback for any other types or missing itemData */}
+            {(!itemData ||
+              ![
+                "ReadStatus",
+                "Review",
+                "UserStatus",
+                "CommentReview",
+                "LikeReview",
+                "AuthorFollowing",
+                "CommentStatus",
+                "LikeReadStatus",
+              ].includes(itemData.type)) && (
+              <p class="goodreads-user-updates">
+                {update.data.title}
+                {update.data.description && (
+                  <span class="goodreads-update-fallback-desc">
+                    {update.data.description.replace(/<[^>]*>/g, "")}
+                  </span>
+                )}
+              </p>
+            )}
+          </div>
+        )
+      })
+    )}
+  </div>
+</div>
+
 <style>
-  .placeholder {
+  .updates-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .goodreads-empty {
+    margin-block: 2rem;
+    text-align: center;
+  }
+
+  .update-item {
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 1rem;
+  }
+  .update-item:hover {
+    background-color: color-mix(in oklch, var(--muted) 50%, transparent);
+  }
+  .update-item * {
+    transition: background-color 300ms ease-in-out;
+  }
+
+  .update-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+  }
+
+  .update-time {
+    position: relative;
+    font-size: var(--step--1), 0.875rem;
+    color: var(--muted-foreground);
+  }
+  .update-time:hover {
+    color: var(--foreground);
+  }
+
+  .update-time-inner {
+    display: flex;
+    align-items: center;
+  }
+
+  .update-time-tip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    white-space: nowrap;
+    padding: 0.25rem 0.5rem;
+    font-size: var(--step--2, 0.75rem);
+    background-color: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
+    z-index: 10;
+  }
+  .update-time:hover .update-time-tip {
+    display: block;
+  }
+
+  .goodreads-badge {
+    display: inline-flex;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    font-size: var(--step--2, 0.75rem);
+    font-weight: 500;
+    background-color: var(--muted);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .goodreads-badge-icon {
+    position: relative;
+    height: 1rem;
+    width: 1rem;
+    vertical-align: middle;
+  }
+
+  .goodreads-badge-icon-review {
+    transform: translateY(-1.5px);
+  }
+
+  .update-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .update-row-start {
+    align-items: flex-start;
+  }
+
+  .update-row-mt2 {
+    margin-top: 0.5rem;
+  }
+
+  .update-row > div:not([class]) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .book-cover {
+    position: relative;
+    height: 117px;
+    width: 78px;
+    min-width: 78px;
+    min-height: 117px;
+  }
+
+  .glashboard-placeholder {
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 1;
-    transition: opacity 0.5s ease-in-out;
+    width: 100%;
+    height: 100%;
+    background-color: var(--muted);
+    border-radius: var(--radius-lg);
+  }
+
+  .glashboard-placeholder-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .glashboard-placeholder-icon {
+    height: 2rem;
+    width: 2rem;
+  }
+
+  .goodreads-progress {
+    display: flex;
+    align-items: center;
+    max-width: 12.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .glashboard-progress-track {
     position: relative;
-    z-index: 1;
+    overflow: hidden;
+    width: 100%;
+    height: 0.625rem;
+    background-color: var(--muted);
+    border-radius: 9999px;
   }
-  .zoomable-image {
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
+
+  .glashboard-progress-fill {
+    height: 100%;
+    background-color: var(--foreground);
+    border-radius: 9999px;
+    transition: width 1s ease-in-out;
   }
-  .zoomable-image.loaded {
-    opacity: 1;
+
+  .goodreads-progress-label {
+    margin-left: 0.5rem;
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
+  }
+
+  .goodreads-avatar {
+    height: 2rem;
+    min-width: 2rem;
+    border-radius: 9999px;
+  }
+
+  .goodreads-avatar-square {
+    object-fit: cover;
+  }
+
+  .bookmark-bubble {
+    position: relative;
+    transform: translateX(-0.3125rem);
+    margin-top: 1.75rem;
+    padding: 0.75rem;
+    background-color: var(--muted);
+    color: var(--foreground);
+    border-radius: 0 var(--radius-xl) var(--radius-xl) var(--radius-xl);
+  }
+
+  .bookmark-bubble-italic {
+    font-style: italic;
+  }
+
+  .goodreads-strong {
+    font-weight: 900;
+  }
+
+  .goodreads-inline {
+    display: inline;
+  }
+
+  .goodreads-plain-link {
+    color: var(--foreground);
+    font-weight: 500;
+  }
+  .goodreads-plain-link:hover {
+    text-decoration-line: underline;
+    text-underline-offset: 4px;
+  }
+
+  .goodreads-update-fallback-desc {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
   }
 </style>
 
-<div class={`goodreads-updates ${className}`}>
-  <div class="updates-container space-y-4">
-    {
-      updates.length === 0 ? (
-        <div class="text-muted-foreground my-8 text-center">
-          <p>No recent updates found.</p>
-        </div>
-      ) : (
-        updates.map((update) => {
-          const itemData = update.data.itemData
-          const date = formatDate(update.data.pubDate)
-          const goodreadsLink = update.data.link || '#'
+<style is:global>
+  .goodreads-updates :where(a) {
+    color: inherit;
+    text-decoration: none;
+  }
 
-          return (
-            <div
-              class="update-item hover:bg-secondary/50 bg-background rounded-xl border p-4 transition-colors duration-300 ease-in-out"
-              data-pub-date={update.data.pubDate}
-            >
-              <div class="mb-1 flex items-start justify-between">
-                <a
-                  href={goodreadsLink}
-                  class="text-muted-foreground hover:text-foreground group cursor-hover relative text-sm transition-colors"
-                >
-                  <span class="flex items-center justify-center">
-                    <span id={`time-ago-${update.id}`}>Some days ago</span>
-                  </span>
-                  <span class="bg-background text-foreground absolute bottom-full left-1/2 z-10 hidden w-max -translate-x-1/2 rounded-md border px-2 py-1 text-xs whitespace-nowrap shadow-md group-hover:block">
-                    {date}
-                  </span>
-                </a>
-                {itemData?.type && (
-                  <span class="bg-secondary text-secondary-foreground inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-medium">
-                    {(() => {
-                      let typeAbbreviation = ''
-                      let icon = ''
+  .goodreads-user-updates {
+    color: var(--foreground);
+    font-size: 1rem;
+    line-height: 1.25rem;
+  }
 
-                      switch (itemData.type) {
-                        case 'ReadStatus':
-                          typeAbbreviation = 'Updates'
-                          icon = 'book-copy'
-                          break
-                        case 'Review':
-                          typeAbbreviation = 'Review'
-                          icon = 'star'
-                          break
-                        case 'UserStatus':
-                          typeAbbreviation = 'Reading'
-                          icon = 'book-open-text'
-                          break
-                        case 'CommentReview':
-                        case 'CommentStatus':
-                          typeAbbreviation = 'Comment'
-                          icon = 'message-square'
-                          break
-                        case 'LikeReview':
-                        case 'LikeReadStatus':
-                          typeAbbreviation = 'Like'
-                          icon = 'heart'
-                          break
-                        case 'AuthorFollowing':
-                          typeAbbreviation = 'Follow'
-                          icon = 'user-plus'
-                          break
-                        default:
-                          typeAbbreviation = '...'
-                          icon = 'info'
-                      }
+  .goodreads-user-updates-sm {
+    color: var(--foreground);
+    font-size: var(--step--1);
+    line-height: 1.25rem;
+  }
 
-                      return (
-                        <>
-                          <Icon
-                            name={`lucide:${icon}`}
-                            class={`relative inline-block h-4 w-4 align-middle ${itemData.type === 'Review' ? '-translate-y-[1.5px]' : ''}`}
-                          />{' '}
-                          {typeAbbreviation}
-                        </>
-                      )
-                    })()}
-                  </span>
-                )}
-              </div>
+  .goodreads-button {
+    box-decoration-break: clone;
+    display: inline-flex;
+    margin-right: 0.25rem;
+    padding: 0 0.25em;
+    background-color: var(--muted);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    vertical-align: baseline;
+    line-height: 1.5;
+    word-wrap: anywhere;
+    transition:
+      background-color 200ms ease-in-out,
+      color 200ms ease-in-out;
+  }
+  .goodreads-button:hover {
+    background-color: var(--foreground);
+    color: var(--background);
+  }
 
-              {/* ReadStatus: started reading, wants to read, finished reading */}
-              {itemData?.type === 'ReadStatus' && (
-                <div class="mt-2 flex items-center gap-4">
-                  <a href={itemData.bookUrl}>
-                    <div class="relative">
-                      <div
-                        class="bg-secondary placeholder h-[117px] w-[78px] rounded-lg"
-                        id={`placeholder-${itemData.bookTitle}`}
-                      >
-                        <div class="bg-secondary flex h-full w-full items-center justify-center rounded-lg">
-                          <Icon
-                            name="lucide:image"
-                            class="text-muted-foreground h-8 w-8"
-                          />
-                        </div>
-                      </div>
-                      <Image
-                        src={itemData.bookImgUrl.replace('_SY75_', '_SY175_')}
-                        alt={`Cover of ${itemData.bookTitle}`}
-                        class="zoomable-image absolute top-0 left-0 h-full w-full rounded-md object-cover"
-                        title={`${itemData.bookTitle}`}
-                        width={78}
-                        height={117}
-                        onload={`document.getElementById('placeholder-${itemData.bookTitle}').classList.add('hidden'); this.classList.add('loaded');`}
-                      />
-                    </div>
-                  </a>
-                  <div>
-                    <p class="goodreads-user-updates">
-                      <a
-                        href={itemData.userUrl}
-                        class="goodreads-button font-black"
-                      >
-                        <Icon
-                          name="lucide:user"
-                          class="goodreads-button-icon"
-                        />
-                        {update.data.title.split(' ')[0]}
-                      </a>
-                      {itemData.readingStatus || 'is reading'}
-                      <br class="hidden lg:block" />
-                      <a href={itemData.bookUrl} class="goodreads-button">
-                        <Icon
-                          name="tabler:book"
-                          class="goodreads-button-icon"
-                        />
-                        <span class="inline">{itemData.bookTitle}</span>
-                      </a>
-                    </p>
-                    {itemData.readingStatus === 'finished reading' ? (
-                      <div class="mt-2 flex max-w-[200px] items-center">
-                        <div class="bg-secondary h-2.5 w-full rounded-full">
-                          <div
-                            class="bg-primary h-2.5 rounded-full"
-                            style={`width: 100%`}
-                          />
-                        </div>
-                        <span class="text-muted-foreground ml-2 text-sm">
-                          100%
-                        </span>
-                      </div>
-                    ) : (
-                      <div class="mt-2 flex max-w-[200px] items-center">
-                        <div class="bg-secondary h-2.5 w-full rounded-full">
-                          <div
-                            class="bg-primary h-2.5 rounded-full"
-                            style={`width: 0%`}
-                          />
-                        </div>
-                        <span class="text-muted-foreground ml-2 text-sm">
-                          0%
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+  .goodreads-button-icon {
+    position: relative;
+    height: 1rem;
+    width: 1rem;
+    margin-right: -0.25rem;
+    align-self: center;
+  }
 
-              {/* Review: rated a book */}
-              {itemData?.type === 'Review' && (
-                <div class="flex items-center gap-4">
-                  <a href={itemData.bookUrl}>
-                    <div class="relative">
-                      <div
-                        class="bg-secondary placeholder h-[117px] w-[78px] rounded-lg"
-                        id={`placeholder-${itemData.bookTitle}`}
-                      >
-                        <div class="bg-secondary flex h-full w-full items-center justify-center rounded-lg">
-                          <Icon
-                            name="lucide:image"
-                            class="text-muted-foreground h-8 w-8"
-                          />
-                        </div>
-                      </div>
-                      <Image
-                        src={itemData.bookImgUrl.replace('_SY75_', '_SY175_')}
-                        alt={`Cover of ${itemData.bookTitle}`}
-                        class="zoomable-image absolute top-0 left-0 h-full w-full rounded-md object-cover"
-                        title={`${itemData.bookTitle}`}
-                        width={78}
-                        height={117}
-                        onload={`document.getElementById('placeholder-${itemData.bookTitle}').classList.add('hidden'); this.classList.add('loaded');`}
-                      />
-                    </div>
-                  </a>
-                  <div>
-                    <p class="goodreads-user-updates text-sm">
-                      <a href={itemData.userUrl} class="goodreads-button">
-                        <Icon
-                          name="lucide:user"
-                          class="goodreads-button-icon"
-                        />
-                        <span class="font-black">
-                          {update.data.title.split(' ')[0]}
-                        </span>
-                      </a>
-                      rated <br class="hidden lg:inline" />
-                      <a href={itemData.bookUrl} class="goodreads-button">
-                        <Icon
-                          name="tabler:book"
-                          class="goodreads-button-icon"
-                        />
-                        {itemData.bookTitle}
-                      </a>
-                      by {itemData.bookAuthor}
-                      <br class="hidden lg:block" />
-                      <a href={goodreadsLink} class="goodreads-button">
-                        <Icon
-                          name="lucide:star"
-                          class="goodreads-button-icon"
-                        />
-                        <span class="font-black">
-                          {itemData.rating}/5 stars
-                        </span>
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* UserStatus: reading progress */}
-              {itemData?.type === 'UserStatus' && (
-                <div class="mt-3 flex items-center gap-4">
-                  <a href={itemData.bookUrl}>
-                    <div class="relative">
-                      <div
-                        class="bg-secondary placeholder h-[117px] w-[78px] rounded-lg"
-                        id={`placeholder-${itemData.bookTitle}`}
-                      >
-                        <div class="bg-secondary flex h-full w-full items-center justify-center rounded-lg">
-                          <Icon
-                            name="lucide:image"
-                            class="text-muted-foreground h-8 w-8"
-                          />
-                        </div>
-                      </div>
-                      <Image
-                        src={itemData.bookImgUrl.replace('_SY75_', '_SY175_')}
-                        alt={`Cover of ${itemData.bookTitle}`}
-                        class="zoomable-image absolute top-0 left-0 h-full w-full rounded-md object-cover"
-                        title={`${itemData.bookTitle}`}
-                        width={78}
-                        height={117}
-                        onload={`document.getElementById('placeholder-${itemData.bookTitle}').classList.add('hidden'); this.classList.add('loaded');`}
-                      />
-                    </div>
-                  </a>
-                  <div>
-                    <p class="goodreads-user-updates">
-                      <a href={itemData.userUrl} class="goodreads-button">
-                        <Icon
-                          name="lucide:user"
-                          class="goodreads-button-icon"
-                        />
-                        <span class="font-black">Aman</span>
-                      </a>
-                      is
-                      <span class="font-black">
-                        {itemData.percentRead
-                          ? `${itemData.percentRead}%`
-                          : 'reading'}
-                      </span>
-                      through
-                      <br class="hidden lg:block" />
-                      <a href={itemData.bookUrl} class="goodreads-button">
-                        <Icon
-                          name="tabler:book"
-                          class="goodreads-button-icon"
-                        />
-                        {itemData.bookTitle}
-                      </a>
-                      by {itemData.bookAuthor}
-                    </p>
-                    {itemData.percentRead && (
-                      <div class="mt-2 flex max-w-[200px] items-center">
-                        <div class="bg-secondary h-2.5 w-full rounded-full">
-                          <div
-                            class="bg-primary h-2.5 rounded-full"
-                            style={`width: ${itemData.percentRead}%`}
-                          />
-                        </div>
-                        <span class="text-muted-foreground ml-2 text-sm">
-                          {itemData.percentRead}%
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* CommentReview: commented on a review */}
-              {itemData?.type === 'CommentReview' && (
-                <div>
-                  <p class="goodreads-user-updates">
-                    <a
-                      href={itemData.userUrl}
-                      class="goodreads-button font-black"
-                    >
-                      <Icon name="lucide:user" class="goodreads-button-icon" />
-                      <span class="inline">
-                        {update.data.title.split(' ')[0]}
-                      </span>
-                    </a>
-                    commented on
-                    <br class="hidden lg:block" />
-                    <a href={itemData.reviewUrl} class="goodreads-button">
-                      <Icon
-                        name="lucide:book-check"
-                        class="goodreads-button-icon"
-                      />
-                      <span class="inline">{itemData.reviewUser}</span>'s review
-                    </a>{' '}
-                    of <br class="hidden lg:block" />
-                    <a href={itemData.bookUrl} class="goodreads-button">
-                      <Icon name="tabler:book" class="goodreads-button-icon" />
-                      <span class="inline">{itemData.bookTitle}</span>
-                    </a>
-                  </p>
-                  <div class="mt-2 flex items-start gap-2">
-                    {itemData.userUrl && (
-                      <img
-                        src="/static/profile.jpg"
-                        alt={`${itemData.userUrl}'s profile`}
-                        class="h-8 w-8 rounded-full"
-                      />
-                    )}
-                    <div class="bg-secondary text-secondary-foreground relative mt-7 -translate-x-[5px] rounded-r-xl rounded-bl-xl p-3">
-                      {itemData.comment}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* LikeReview: liked someone's review */}
-              {itemData?.type === 'LikeReview' && (
-                <div class="flex items-start gap-4">
-                  <a href={itemData.bookUrl}>
-                    <div class="relative">
-                      <div
-                        class="bg-secondary placeholder h-[117px] w-[78px] rounded-lg"
-                        id={`placeholder-${itemData.bookTitle}`}
-                      >
-                        <div class="bg-secondary flex h-full w-full items-center justify-center rounded-lg">
-                          <Icon
-                            name="lucide:image"
-                            class="text-muted-foreground h-8 w-8"
-                          />
-                        </div>
-                      </div>
-                      <Image
-                        src={itemData.bookImgUrl.replace('_SY75_', '_SY175_')}
-                        alt={`Cover of ${itemData.bookTitle}`}
-                        class="zoomable-image absolute top-0 left-0 h-full w-full rounded-md object-cover"
-                        title={`${itemData.bookTitle}`}
-                        width={78}
-                        height={117}
-                        onload={`document.getElementById('placeholder-${itemData.bookTitle}').classList.add('hidden'); this.classList.add('loaded');`}
-                      />
-                    </div>
-                  </a>
-                  <div>
-                    <p class="goodreads-user-updates">
-                      <a
-                        href={itemData.userUrl}
-                        class="goodreads-button font-black"
-                      >
-                        <Icon
-                          name="lucide:user"
-                          class="goodreads-button-icon"
-                        />
-                        {update.data.title.split(' ')[0]}
-                      </a>
-                      liked
-                      <a
-                        href={itemData.reviewUrl}
-                        class="text-foreground font-medium underline-offset-4 hover:underline"
-                      >
-                        {itemData.reviewUser}'s review
-                      </a>{' '}
-                      of{' '}
-                      <a
-                        href={itemData.bookUrl}
-                        class="text-foreground font-medium underline-offset-4 hover:underline"
-                      >
-                        {itemData.bookTitle}
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* AuthorFollowing: followed an author */}
-              {itemData?.type === 'AuthorFollowing' && (
-                <div>
-                  <p class="goodreads-user-updates">
-                    <a
-                      href={itemData.userUrl}
-                      class="goodreads-button font-black"
-                    >
-                      <Icon name="lucide:user" class="goodreads-button-icon" />
-                      {update.data.title.split(' ')[0]}
-                    </a>
-                    started following author
-                    <a
-                      href={`https://www.goodreads.com/author/show/${itemData.authorId}`}
-                      class="goodreads-button"
-                    >
-                      <Icon name="tabler:book" class="goodreads-button-icon" />
-                      <span class="inline">
-                        {update.data.title
-                          .replace('is now following', '')
-                          .trim()}
-                      </span>
-                    </a>
-                  </p>
-                </div>
-              )}
-
-              {/* CommentStatus: commented on a status */}
-              {itemData?.type === 'CommentStatus' && (
-                <div>
-                  <p class="goodreads-user-updates">
-                    <a
-                      href={itemData.userUrl}
-                      class="goodreads-button font-black"
-                    >
-                      <Icon name="lucide:user" class="goodreads-button-icon" />
-                      {update.data.title.split(' ')[0]}
-                    </a>
-                    commented on
-                    <a href={itemData.statusUrl} class="goodreads-button">
-                      <Icon name="lucide:bell" class="goodreads-button-icon" />
-                      {itemData.statusUser}'s status
-                    </a>
-                  </p>
-                  <div class="mt-2 flex items-start gap-2">
-                    {itemData.userUrl && (
-                      <img
-                        src="/static/profile.jpg"
-                        alt={`${itemData.userUrl}'s profile`}
-                        class="h-8 w-8 rounded-full"
-                      />
-                    )}
-                    <div class="bg-secondary text-secondary-foreground relative mt-7 -translate-x-[5px] rounded-r-xl rounded-bl-xl p-3">
-                      {itemData.comment}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* LikeReadStatus: liked someone's read status */}
-              {itemData?.type === 'LikeReadStatus' && (
-                <div>
-                  <p class="goodreads-user-updates">
-                    <a
-                      href={itemData.userUrl}
-                      class="goodreads-button font-black"
-                    >
-                      <Icon name="lucide:user" class="goodreads-button-icon" />
-                      {update.data.title.split(' ')[0]}
-                    </a>
-                    liked
-                    {itemData.readStatusUser}'s status update:
-                  </p>
-                  <div class="mt-2 flex items-start gap-2">
-                    {itemData.readStatusUserImgUrl && (
-                      <img
-                        src={itemData.readStatusUserImgUrl}
-                        alt={`${itemData.readStatusUser}'s profile`}
-                        class="aspect-square h-8 w-8 rounded-full object-cover"
-                      />
-                    )}
-                    <div class="bg-secondary text-secondary-foreground relative mt-7 -translate-x-[5px] rounded-r-xl rounded-bl-xl p-3 italic">
-                      {itemData.readStatusUser} {itemData.readStatus}
-                      <br class="hidden lg:block" />
-                      <a href={itemData.bookUrl} class="goodreads-button">
-                        <Icon
-                          name="tabler:book"
-                          class="goodreads-button-icon"
-                        />
-                        <span class="inline">{itemData.bookTitle}</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Fallback for any other types or missing itemData */}
-              {(!itemData ||
-                ![
-                  'ReadStatus',
-                  'Review',
-                  'UserStatus',
-                  'CommentReview',
-                  'LikeReview',
-                  'AuthorFollowing',
-                  'CommentStatus',
-                  'LikeReadStatus',
-                ].includes(itemData.type)) && (
-                <p class="goodreads-user-updates">
-                  {update.data.title}
-                  {update.data.description && (
-                    <span class="text-muted-foreground mt-1 block text-sm">
-                      {update.data.description.replace(/<[^>]*>/g, '')}
-                    </span>
-                  )}
-                </p>
-              )}
-            </div>
-          )
-        })
-      )
+  .goodreads-br-lg {
+    display: none;
+  }
+  @media (min-width: 64rem) {
+    .goodreads-br-lg {
+      display: block;
     }
-  </div>
-</div>
+  }
+
+  .goodreads-br-inline {
+    display: none;
+  }
+  @media (min-width: 64rem) {
+    .goodreads-br-inline {
+      display: inline;
+    }
+  }
+</style>
 
 <script is:inline>
   function updateTimeAgo() {
@@ -603,23 +893,23 @@ const formatDate = (dateString: string) => {
       const years = Math.floor(days / 365)
 
       if (years > 0) {
-        return `${years} year${years > 1 ? 's' : ''} ago`
+        return `${years} year${years > 1 ? "s" : ""} ago`
       } else if (months > 0) {
-        return `${months} month${months > 1 ? 's' : ''} ago`
+        return `${months} month${months > 1 ? "s" : ""} ago`
       } else if (weeks > 0) {
-        return `${weeks} week${weeks > 1 ? 's' : ''} ago`
+        return `${weeks} week${weeks > 1 ? "s" : ""} ago`
       } else if (days > 0) {
-        return `${days} day${days > 1 ? 's' : ''} ago`
+        return `${days} day${days > 1 ? "s" : ""} ago`
       } else if (hours > 0) {
-        return `${hours} hour${hours > 1 ? 's' : ''} ago`
+        return `${hours} hour${hours > 1 ? "s" : ""} ago`
       } else if (minutes > 0) {
-        return `${minutes} minute${minutes > 1 ? 's' : ''} ago`
+        return `${minutes} minute${minutes > 1 ? "s" : ""} ago`
       } else {
-        return 'Just now'
+        return "Just now"
       }
     }
 
-    const updates = document.querySelectorAll('.update-item')
+    const updates = document.querySelectorAll(".update-item")
 
     updates.forEach((update) => {
       const timeAgoElement = update.querySelector('[id^="time-ago-"]')
@@ -635,7 +925,7 @@ const formatDate = (dateString: string) => {
   updateTimeAgo()
 
   // Run after navigation with Astro's view transitions or Swup
-  document.addEventListener('astro:page-load', updateTimeAgo)
-  document.addEventListener('astro:after-swap', updateTimeAgo)
-  document.addEventListener('swup:contentReplaced', updateTimeAgo)
+  document.addEventListener("astro:page-load", updateTimeAgo)
+  document.addEventListener("astro:after-swap", updateTimeAgo)
+  document.addEventListener("swup:contentReplaced", updateTimeAgo)
 </script>

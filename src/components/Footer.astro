@@ -1,56 +1,94 @@
 ---
-import { Separator } from '@/components/ui/separator'
-import { SOCIAL_LINKS } from '@/consts'
-import { Icon } from 'astro-icon/components'
-import Link from './Link.astro'
-import SocialIcons from './SocialIcons.astro'
+import ArrowLeftIcon from "@/assets/icons/arrow-left.svg"
+import ArrowRightIcon from "@/assets/icons/arrow-right.svg"
+import DiceIcon from "@/assets/icons/dice.svg"
+import SocialIcons from "@/components/SocialIcons.astro"
+import { SITE, SOCIALS } from "@/consts"
 ---
 
-<footer class="py-4">
-  <div
-    class="mx-auto flex max-w-3xl flex-col items-start gap-y-4 px-4 sm:flex-row sm:items-center sm:justify-between"
-  >
-    <div class="flex flex-col items-start gap-y-2 text-left">
-      <div class="text-muted-foreground flex items-center gap-x-3 text-sm">
-        <Link
-          href="https://ring.seggs.lol"
-          class="text-foreground font-mono font-medium"
-        >
-          thread<span class="text-[#907aa9] dark:text-[#c4a7e7]"
-            >locked
-          </span>webring:
-        </Link>
-        <Link
-          href="https://ring.seggs.lol/redirect?from=nolawz&dir=prev"
-          title="Previous site"
-        >
-          <Icon name="lucide:arrow-left" class="size-4" />
-        </Link>
-        <Link href="https://ring.seggs.lol/random" title="Random site">
-          <Icon name="lucide:dices" class="size-4" />
-        </Link>
-        <Link
-          href="https://ring.seggs.lol/redirect?from=nolawz&dir=next"
-          title="Next site"
-        >
-          <Icon name="lucide:arrow-right" class="size-4" />
-        </Link>
-      </div>
-      <div class="flex flex-wrap items-center gap-x-2">
-        <span class="text-muted-foreground text-sm">
-          &copy; {new Date().getFullYear()} All rights reserved.
-        </span>
-        <Separator orientation="vertical" className="hidden h-4! sm:block" />
-        <p class="text-muted-foreground text-sm">
-          Made with 🤍 by <Link
-            href="https://github.com/aman333nolawz"
-            class="text-foreground"
-            external
-            underline>Nolawz</Link
-          >!
-        </p>
-      </div>
-    </div>
-    <SocialIcons links={SOCIAL_LINKS} />
+<footer>
+  <p class="copyright">
+    &copy; {new Date().getFullYear()}
+    {SITE.title}
+  </p>
+  <div class="webring">
+    <a href="https://ring.seggs.lol" class="ring-label">
+      thread<span class="accent">locked </span>webring:
+    </a>
+    <a
+      href="https://ring.seggs.lol/redirect?from=nolawz&dir=prev"
+      title="Previous site"
+      aria-label="Previous site"
+    >
+      <ArrowLeftIcon aria-hidden="true" />
+    </a>
+    <a
+      href="https://ring.seggs.lol/random"
+      title="Random site"
+      aria-label="Random site"
+    >
+      <DiceIcon aria-hidden="true" />
+    </a>
+    <a
+      href="https://ring.seggs.lol/redirect?from=nolawz&dir=next"
+      title="Next site"
+      aria-label="Next site"
+    >
+      <ArrowRightIcon aria-hidden="true" />
+    </a>
   </div>
+  <SocialIcons links={SOCIALS} />
 </footer>
+
+<style>
+  footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-block: var(--space-xs) var(--page-offset-bottom);
+
+    @media (width >= 40rem) {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    p {
+      font-size: var(--step--1);
+      color: var(--muted-foreground);
+    }
+
+    .webring {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: var(--step--1);
+
+      a:not(.ring-label) {
+        display: inline-flex;
+        color: var(--muted-foreground);
+        text-decoration: none;
+
+        &:hover {
+          color: var(--foreground);
+        }
+
+        svg {
+          width: 1rem;
+          height: 1rem;
+        }
+      }
+
+      .ring-label {
+        font-family: var(--font-mono);
+        font-weight: 500;
+        color: var(--foreground);
+        text-decoration: none;
+
+        .accent {
+          color: light-dark(#907aa9, #c4a7e7);
+        }
+      }
+    }
+  }
+</style>

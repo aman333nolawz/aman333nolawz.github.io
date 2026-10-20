@@ -1,30 +1,32 @@
 ---
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import PageHead from '@/components/PageHead.astro'
-import ProjectCard from '@/components/ProjectCard.astro'
-import Layout from '@/layouts/Layout.astro'
-import { getAllProjects } from '@/lib/data-utils'
+import MetaPage from "@/components/MetaPage.astro"
+import ProjectCard from "@/components/ProjectCard.astro"
+import Layout from "@/layouts/Layout.astro"
+import { getAllProjects } from "@/lib/data-utils"
 
 const projects = await getAllProjects()
 ---
 
-<Layout class="max-w-3xl">
-  <PageHead slot="head" title="About" />
-  <Breadcrumbs items={[{ label: 'About', icon: 'lucide:info' }]} />
+<Layout crumbs={[{ label: "About", href: "/about" }]}>
+  <MetaPage slot="head" title="About" />
+  <p class="about-intro">
+    Nolawz is just a curious mind wandering around the internet playing CTFs and
+    solving some minor problems.
+  </p>
+  <h2>Projects</h2>
+  <ul class="about-projects">
+    {projects.map((project) => <ProjectCard project={project} />)}
+  </ul>
+</Layout>
 
-  <section>
-    <div class="min-w-full">
-      <div class="prose mb-8">
-        <p class="mt-0">
-          Nolawz is just a curious mind wandering around the internet playing
-          CTFs and solving some minor problems.
+<style>
+  .about-intro {
+    margin-block-end: var(--space-l);
+  }
 
-          <h2 class="mb-4 text-2xl font-medium">Projects</h2>
-          <div class="flex flex-col gap-4">
-            {projects.map((project) => <ProjectCard project={project} />)}
-          </div>
-        </p>
-      </div>
-    </div>
-  </section></Layout
->
+  .about-projects {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+</style>

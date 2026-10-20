@@ -1,13 +1,12 @@
 ---
-import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import PageHead from '@/components/PageHead.astro'
-import Layout from '@/layouts/Layout.astro'
-import { getCollection } from 'astro:content'
+import Layout from "@/layouts/Layout.astro"
+import MetaPage from "@/components/MetaPage.astro"
+import { getCollection } from "astro:content"
 
-import GoodreadsGrid from '@/components/custom/GoodreadsGrid.astro'
-import GoodreadsUserUpdates from '@/components/custom/GoodreadsUserUpdates.astro'
+import GoodreadsGrid from "@/components/custom/GoodreadsGrid.astro"
+import GoodreadsUserUpdates from "@/components/custom/GoodreadsUserUpdates.astro"
 
-type ReadingCategory = 'books' | 'papers' | 'articles'
+type ReadingCategory = "books" | "papers" | "articles"
 
 type ReadingCategoryMeta = {
   label: string
@@ -17,37 +16,38 @@ type ReadingCategoryMeta = {
 
 type ReadingResource = {
   title: string
-  category: Exclude<ReadingCategory, 'books'>
+  category: Exclude<ReadingCategory, "books">
   url: string
   source?: string
   note?: string
 }
 
-const readBooks = await getCollection('goodreads_read_books')
+const readBooks = await getCollection("goodreads_read_books")
 
 const readingResources: ReadingResource[] = [
   {
-    title: "A Core-Structure-Based Automated Deobfuscation Tool for Commercial Virtualization Obfuscation Analysis",
+    title:
+      "A Core-Structure-Based Automated Deobfuscation Tool for Commercial Virtualization Obfuscation Analysis",
     category: "papers",
-    url: "https://arxiv.org/pdf/2605.30902"
-  }
+    url: "https://arxiv.org/pdf/2605.30902",
+  },
 ]
 
 const readingCategoryMeta: Record<ReadingCategory, ReadingCategoryMeta> = {
   books: {
-    label: 'books',
-    rgb: '122 162 247',
-    foreground: '#7aa2f7',
+    label: "books",
+    rgb: "122 162 247",
+    foreground: "#7aa2f7",
   },
   papers: {
-    label: 'papers',
-    rgb: '187 154 247',
-    foreground: '#bb9af7',
+    label: "papers",
+    rgb: "187 154 247",
+    foreground: "#bb9af7",
   },
   articles: {
-    label: 'articles',
-    rgb: '158 206 106',
-    foreground: '#9ece6a',
+    label: "articles",
+    rgb: "158 206 106",
+    foreground: "#9ece6a",
   },
 }
 
@@ -55,69 +55,65 @@ const readingCategories = Object.keys(readingCategoryMeta) as ReadingCategory[]
 
 const readingCategoryCounts: Record<ReadingCategory, number> = {
   books: readBooks.length,
-  papers: readingResources.filter((resource) => resource.category === 'papers')
+  papers: readingResources.filter((resource) => resource.category === "papers")
     .length,
   articles: readingResources.filter(
-    (resource) => resource.category === 'articles',
+    (resource) => resource.category === "articles",
   ).length,
 }
 ---
 
-<Layout class="max-w-5xl">
-  <PageHead slot="head" title="Reading" />
-  <Breadcrumbs items={[{ label: 'Reading', icon: 'lucide:book' }]} />
+<Layout crumbs={[{ label: "Reading", href: "/reading" }]}>
+  <MetaPage slot="head" title="Reading" />
 
-  <section class="flex flex-col gap-y-5">
-    <div>
-      <h1 class="text-2xl font-medium">Reading</h1>
-      <p class="text-muted-foreground mt-1 text-sm">
-        Books, papers, and articles I am reading through.
-      </p>
-    </div>
+  <section class="reading">
+    <h1>Reading</h1>
+    <p class="reading-description">
+      Books, papers, and articles I am reading through.
+    </p>
 
-    <div class="flex flex-wrap gap-2" id="reading-filter-bar">
-      {
-        readingCategories.map((category) => (
-          <button
-            class="reading-filter-btn inline-flex h-9 cursor-pointer items-center rounded-md px-3 text-sm font-medium transition-all"
-            data-target={category}
-            data-active={category === 'books' ? 'true' : 'false'}
-          >
-            {readingCategoryMeta[category].label}
-            <span class="ml-1.5 font-normal opacity-60">
-              {readingCategoryCounts[category]}
-            </span>
-          </button>
-        ))
-      }
+    <div class="reading-filter-bar" id="reading-filter-bar">
+      {readingCategories.map((category) => (
+        <button
+          class="reading-filter-btn"
+          data-target={category}
+          data-active={category === "books" ? "true" : "false"}
+        >
+          {readingCategoryMeta[category].label}
+          <span class="reading-filter-count">
+            {readingCategoryCounts[category]}
+          </span>
+        </button>
+      ))}
     </div>
 
     <div id="reading-panels">
       <div class="reading-panel" data-category="books">
-        <div class="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,2.1fr)]">
+        <div class="reading-books-grid">
           <div>
-            <h2 class="mb-3">
+            <h2 class="reading-heading">
               <a
                 href="https://www.goodreads.com/user/show/201671700-aman-p"
                 target="_blank"
-                class="hover:bg-secondary/70 bg-background relative inline-flex items-center rounded-md border px-3 py-1 text-sm font-medium transition-colors"
+                rel="noopener noreferrer"
+                class="activity-link"
               >
-                <span
-                  class="bg-primary absolute left-2 h-2 w-2 animate-ping rounded-full duration-1400"
-                ></span>
-                <span class="bg-primary absolute left-2 h-2 w-2 rounded-full"
-                ></span>
-                <span class="ml-[10px]">Goodreads Activity</span>
+                <span class="activity-dot-wrapper">
+                  <span class="activity-dot activity-dot-ping"></span>
+                  <span class="activity-dot"></span>
+                </span>
+                <span>Goodreads Activity</span>
               </a>
             </h2>
             <GoodreadsUserUpdates limit={10} />
           </div>
           <div>
-            <h2 class="mb-4 text-2xl font-medium">
+            <h2 class="reading-heading">
               <a
                 href="https://www.goodreads.com/review/list/201671700-aman-p?shelf=read&sort=date_read&order=d"
                 target="_blank"
-                class="hover:text-muted-foreground transition-colors"
+                rel="noopener noreferrer"
+                class="reads-link"
               >
                 Latest reads
               </a>
@@ -127,69 +123,92 @@ const readingCategoryCounts: Record<ReadingCategory, number> = {
         </div>
       </div>
 
-      {
-        (['papers', 'articles'] as const).map((category) => (
-          <div class="reading-panel hidden" data-category={category}>
-            {readingCategoryCounts[category] > 0 ? (
-              <ul class="flex flex-col gap-1.5">
-                {readingResources
-                  .filter((resource) => resource.category === category)
-                  .map((resource) => (
-                    <li class="reading-resource-item flex items-start gap-2 text-sm">
-                      <span
-                        class="reading-badge shrink-0 rounded px-1.5 py-0.5 text-[11px] font-medium"
-                        style={`--reading-badge-rgb: ${readingCategoryMeta[resource.category].rgb}; --reading-badge-foreground: ${readingCategoryMeta[resource.category].foreground};`}
+      {(["papers", "articles"] as const).map((category) => (
+        <div class="reading-panel hidden" data-category={category}>
+          {readingCategoryCounts[category] > 0 ? (
+            <ul class="reading-resources">
+              {readingResources
+                .filter((resource) => resource.category === category)
+                .map((resource) => (
+                  <li class="reading-resource-item">
+                    <span
+                      class="reading-badge"
+                      style={`--reading-badge-rgb: ${readingCategoryMeta[resource.category].rgb}; --reading-badge-foreground: ${readingCategoryMeta[resource.category].foreground};`}
+                    >
+                      {readingCategoryMeta[resource.category].label}
+                    </span>
+                    <span class="reading-resource-body">
+                      <a
+                        href={resource.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="reading-resource-link"
                       >
-                        {readingCategoryMeta[resource.category].label}
-                      </span>
-                      <span class="min-w-0 flex-1">
-                        <a
-                          href={resource.url}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          class="text-foreground hover:text-muted-foreground underline decoration-current/25 underline-offset-3 transition-colors"
-                        >
-                          {resource.title}
-                        </a>
-                        {(resource.source || resource.note) && (
-                          <span class="text-muted-foreground ml-1">
-                            {resource.source && <span>{resource.source}</span>}
-                            {resource.source && resource.note && (
-                              <span> · </span>
-                            )}
-                            {resource.note && <span>{resource.note}</span>}
-                          </span>
-                        )}
-                      </span>
-                    </li>
-                  ))}
-              </ul>
-            ) : (
-              <p class="text-muted-foreground text-sm">
-                No {readingCategoryMeta[category].label} yet.
-              </p>
-            )}
-          </div>
-        ))
-      }
+                        {resource.title}
+                      </a>
+                      {(resource.source || resource.note) && (
+                        <span class="reading-resource-meta">
+                          {resource.source && <span>{resource.source}</span>}
+                          {resource.source && resource.note && <span> · </span>}
+                          {resource.note && <span>{resource.note}</span>}
+                        </span>
+                      )}
+                    </span>
+                  </li>
+                ))}
+            </ul>
+          ) : (
+            <p class="reading-empty">
+              No {readingCategoryMeta[category].label} yet.
+            </p>
+          )}
+        </div>
+      ))}
     </div>
   </section>
 </Layout>
 
 <style>
-  .reading-badge {
-    --reading-badge-rgb: 122 162 247;
-    --reading-badge-foreground: #7aa2f7;
-    border: 1px solid rgb(var(--reading-badge-rgb) / 0.28);
-    background-color: rgb(var(--reading-badge-rgb) / 0.14);
-    color: var(--reading-badge-foreground);
-    backdrop-filter: blur(10px) saturate(140%);
-    box-shadow: inset 0 1px 0 rgb(var(--reading-badge-rgb) / 0.12);
-    text-align: center;
+  .reading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+
+  .reading h1 {
+    color: var(--foreground);
+    font-size: var(--step-2);
+    font-weight: var(--font-weight-medium);
+    margin-block: 0;
+  }
+
+  .reading-description {
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    margin-block: var(--space-3xs) 0;
+  }
+
+  .reading-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
   }
 
   .reading-filter-btn {
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    border-radius: var(--radius-md);
     color: var(--muted-foreground);
+    cursor: pointer;
+    font: inherit;
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    padding: 0.5rem 0.75rem;
+    transition:
+      background-color 150ms ease,
+      color 150ms ease;
   }
 
   .reading-filter-btn:hover {
@@ -197,48 +216,194 @@ const readingCategoryCounts: Record<ReadingCategory, number> = {
     color: var(--foreground);
   }
 
-  .reading-filter-btn[data-active='true'] {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
+  .reading-filter-btn[data-active="true"] {
+    background-color: var(--foreground);
+    color: var(--background);
   }
 
-  .reading-filter-btn[data-active='true']:hover {
-    background-color: color-mix(in oklch, var(--primary) 90%, transparent);
+  .reading-filter-btn[data-active="true"]:hover {
+    background-color: color-mix(in oklch, var(--foreground) 90%, transparent);
+    color: var(--background);
+  }
+
+  .reading-filter-count {
+    font-weight: var(--font-weight-normal);
+    margin-inline-start: 0.25rem;
+    opacity: 0.6;
   }
 
   .reading-panel.hidden {
     display: none;
   }
+
+  .reading-books-grid {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  @media (min-width: 64rem) {
+    .reading-books-grid {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.8fr);
+    }
+  }
+
+  .reading-heading {
+    color: var(--foreground);
+    font-size: var(--step-1);
+    font-weight: var(--font-weight-medium);
+    margin-block: 0 var(--space-3xs);
+  }
+
+  .reading-heading a {
+    text-decoration: none;
+  }
+
+  .activity-link {
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--foreground);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem 0.25rem 0.625rem;
+    transition: background-color 150ms ease;
+  }
+
+  .activity-link:hover {
+    background-color: var(--muted);
+  }
+
+  .activity-dot-wrapper {
+    display: inline-block;
+    flex-shrink: 0;
+    height: 0.5rem;
+    position: relative;
+    width: 0.5rem;
+  }
+
+  .activity-dot {
+    background-color: var(--foreground);
+    border-radius: var(--radius-full);
+    height: 0.5rem;
+    position: absolute;
+    inset: 0;
+    width: 0.5rem;
+  }
+
+  @keyframes activity-ping {
+    75%,
+    100% {
+      opacity: 0;
+      transform: scale(2);
+    }
+  }
+
+  .activity-dot-ping {
+    animation: activity-ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  .reads-link {
+    color: var(--foreground);
+    transition: color 150ms ease;
+  }
+
+  .reads-link:hover {
+    color: var(--muted-foreground);
+  }
+
+  .reading-resources {
+    display: flex;
+    flex-direction: column;
+    font-size: var(--step--1);
+    gap: 0.375rem;
+    list-style: none;
+    margin-block: 0;
+    padding-inline-start: 0;
+  }
+
+  .reading-resource-item {
+    align-items: flex-start;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .reading-badge {
+    --reading-badge-rgb: 122 162 247;
+    --reading-badge-foreground: #7aa2f7;
+    backdrop-filter: blur(10px) saturate(140%);
+    background-color: rgb(var(--reading-badge-rgb) / 0.14);
+    border: 1px solid rgb(var(--reading-badge-rgb) / 0.28);
+    border-radius: var(--radius-sm);
+    box-shadow: inset 0 1px 0 rgb(var(--reading-badge-rgb) / 0.12);
+    color: var(--reading-badge-foreground);
+    flex-shrink: 0;
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    padding: 0.125rem 0.375rem;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .reading-resource-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .reading-resource-link {
+    color: var(--foreground);
+    text-decoration-color: color-mix(in oklab, currentColor 30%, transparent);
+    transition: color 150ms ease;
+  }
+
+  .reading-resource-link:hover {
+    color: var(--muted-foreground);
+  }
+
+  .reading-resource-meta {
+    color: var(--muted-foreground);
+    margin-inline-start: 0.25rem;
+  }
+
+  .reading-empty {
+    color: var(--muted-foreground);
+    font-size: var(--step--1);
+    margin-block: 0;
+  }
 </style>
 
 <script is:inline data-astro-rerun>
   ;(() => {
-    const filterBar = document.getElementById('reading-filter-bar')
-    const panelsContainer = document.getElementById('reading-panels')
+    const filterBar = document.getElementById("reading-filter-bar")
+    const panelsContainer = document.getElementById("reading-panels")
 
     if (!filterBar || !panelsContainer) return
 
     const filterBtns = Array.from(
-      filterBar.querySelectorAll('.reading-filter-btn'),
+      filterBar.querySelectorAll(".reading-filter-btn"),
     )
     const panels = Array.from(
-      panelsContainer.querySelectorAll('.reading-panel'),
+      panelsContainer.querySelectorAll(".reading-panel"),
     )
 
-    let currentFilter = 'books'
+    let currentFilter = "books"
 
     function render() {
       panels.forEach((panel) => {
         panel.classList.toggle(
-          'hidden',
+          "hidden",
           panel.dataset.category !== currentFilter,
         )
       })
     }
 
-    filterBar.addEventListener('click', (event) => {
+    filterBar.addEventListener("click", (event) => {
       const target = event.target instanceof Element ? event.target : null
-      const button = target?.closest('.reading-filter-btn')
+      const button = target?.closest(".reading-filter-btn")
       if (!button?.dataset.target) return
 
       currentFilter = button.dataset.target
