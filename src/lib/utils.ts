@@ -33,3 +33,8 @@ export function readingTime(wordCount: number): string {
   const readingTimeMinutes = Math.max(1, Math.round(wordCount / 200))
   return `${readingTimeMinutes} min read`
 }
+
+export const sizedAvatar = (url: string, size: number) =>
+  url.startsWith("https://avatars.githubusercontent.com/")
+    ? `${url}?s=${size}`
+    : url

@@ -6,7 +6,7 @@ import SubpostNav from "@/components/custom/SubpostNav.astro"
 import TableOfContents from "@/components/TableOfContents.astro"
 import Layout from "@/layouts/Layout.astro"
 import { getPosts, getSubposts } from "@/lib/content"
-import { formatDate, isSubpost, subpostSlug } from "@/lib/utils"
+import { formatDate, isSubpost, sizedAvatar, subpostSlug } from "@/lib/utils"
 import { Image } from "astro:assets"
 import { getEntries, render, type CollectionEntry } from "astro:content"
 
@@ -96,10 +96,12 @@ if (isSubpost(post.id)) {
             <author-avatars>
               {current.authors.map((author) => (
                 <img
-                  src={author.data.avatar}
+                  src={sizedAvatar(author.data.avatar, 64)}
                   alt={author.data.name}
                   width="18"
                   height="18"
+                  loading="lazy"
+                  decoding="async"
                 />
               ))}
             </author-avatars>
