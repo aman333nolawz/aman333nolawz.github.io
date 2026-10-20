@@ -23,8 +23,8 @@ const section = NAVIGATION.find(
     </a>
     <nav id="site-nav" data-site-nav>
       <ul>
-        {NAVIGATION.map((item) => (
-          <li>
+        {NAVIGATION.map((item, i) => (
+          <li style={`--i: ${i}`}>
             <a
               href={item.href}
               aria-current={pathname === item.href ? "page" : undefined}
@@ -36,7 +36,7 @@ const section = NAVIGATION.find(
               pathname !== item.href && (
                 <ul>
                   {crumbs.map((crumb, i) => (
-                    <li data-depth={i ? 1 : undefined}>
+                    <li style={`--i: ${i}`} data-depth={i ? 1 : undefined}>
                       <a
                         href={crumb.href}
                         aria-current={
@@ -53,7 +53,7 @@ const section = NAVIGATION.find(
         ))}
         {!section &&
           crumbs.map((crumb, i) => (
-            <li data-depth={i ? 1 : undefined}>
+            <li style={`--i: ${i}`} data-depth={i ? 1 : undefined}>
               <a
                 href={crumb.href}
                 aria-current={i === crumbs.length - 1 ? "page" : undefined}
@@ -94,11 +94,22 @@ const section = NAVIGATION.find(
     @media (width < 64rem) {
       position: static;
       height: auto;
+    }
+
+    @media (width < 40rem) {
       flex-direction: row;
       flex-wrap: wrap;
       align-items: flex-start;
       gap: var(--space-s);
       row-gap: var(--space-2xs);
+    }
+
+    @media (40rem <= width < 64rem) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2xs);
     }
   }
 
@@ -130,7 +141,7 @@ const section = NAVIGATION.find(
       }
     }
 
-    @media (width < 64rem) {
+    @media (width < 40rem) {
       flex: 1 1 0;
       min-width: 0;
       flex-direction: row;
@@ -138,6 +149,22 @@ const section = NAVIGATION.find(
       align-items: center;
       justify-content: space-between;
       row-gap: var(--space-2xs);
+    }
+
+    @media (40rem <= width < 64rem) {
+      flex: 1 1 0;
+      min-width: 0;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-s);
+      row-gap: var(--space-2xs);
+    }
+  }
+
+  nav {
+    @media (40rem <= width < 64rem) {
+      margin-inline-start: auto;
     }
   }
 
@@ -149,6 +176,7 @@ const section = NAVIGATION.find(
     a {
       display: block;
       color: var(--muted-foreground);
+      transition: color 150ms ease;
 
       &:hover,
       &[aria-current="page"] {
@@ -172,7 +200,24 @@ const section = NAVIGATION.find(
       }
     }
 
-    @media (width < 64rem) {
+    @media (width < 40rem) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-s);
+      row-gap: var(--space-2xs);
+
+      ul {
+        display: none;
+      }
+
+      a {
+        white-space: nowrap;
+        padding-block: 0.25rem;
+      }
+    }
+
+    @media (40rem <= width < 64rem) {
       flex-direction: row;
       flex-wrap: wrap;
       align-items: center;
@@ -191,7 +236,7 @@ const section = NAVIGATION.find(
   }
 
   nav li:has(> ul) > a {
-    @media (width < 64rem) {
+    @media (width < 40rem) {
       color: var(--foreground);
     }
   }
@@ -210,36 +255,73 @@ const section = NAVIGATION.find(
     }
   }
 
-  @media (width < 64rem) {
+  @media (width < 40rem) {
     [data-nav-toggle] {
       display: inline-flex;
+      position: relative;
+    }
+
+    menu-icon,
+    close-icon {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transform: scale(0.75);
+      transition:
+        opacity 150ms ease,
+        transform 150ms ease;
     }
 
     [data-nav-toggle] menu-icon {
-      display: inline;
-    }
-
-    [data-nav-toggle][aria-expanded="true"] close-icon {
-      display: inline;
+      opacity: 1;
+      transform: scale(1);
     }
 
     [data-nav-toggle][aria-expanded="true"] menu-icon {
-      display: none;
+      opacity: 0;
+      transform: scale(0.75);
+    }
+
+    [data-nav-toggle][aria-expanded="true"] close-icon {
+      opacity: 1;
+      transform: scale(1);
     }
 
     nav {
       display: none;
     }
 
-    aside[data-menu-open] nav {
+    aside[data-menu-open] nav,
+    aside[data-menu-closing] nav {
       display: flex;
       flex: 1 1 100%;
     }
 
-    aside[data-menu-open] nav ul {
+    aside[data-menu-closing] nav {
+      pointer-events: none;
+    }
+
+    aside[data-menu-open] nav {
+      animation: site-nav-open 200ms cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
+    aside[data-menu-closing] nav {
+      animation: site-nav-close 150ms ease forwards;
+    }
+
+    aside[data-menu-open] nav ul,
+    aside[data-menu-closing] nav ul {
       flex-direction: column;
       align-items: flex-start;
       width: 100%;
+    }
+
+    aside[data-menu-open] nav li {
+      animation: site-nav-item-open 250ms cubic-bezier(0.33, 1, 0.68, 1)
+        backwards;
+      animation-delay: calc(var(--i, 0) * 25ms);
     }
   }
 
@@ -248,9 +330,32 @@ const section = NAVIGATION.find(
     align-items: center;
     margin-inline-start: -0.5rem;
 
-    @media (width < 64rem) {
+    @media (width < 40rem) {
       margin-inline-start: 0;
       margin-inline-end: -0.5rem;
+    }
+  }
+</style>
+
+<style is:global>
+  @keyframes site-nav-open {
+    from {
+      opacity: 0;
+      transform: translateY(-0.5rem);
+    }
+  }
+
+  @keyframes site-nav-item-open {
+    from {
+      opacity: 0;
+      transform: translateY(0.25rem);
+    }
+  }
+
+  @keyframes site-nav-close {
+    to {
+      opacity: 0;
+      transform: translateY(-0.5rem);
     }
   }
 </style>
@@ -259,16 +364,46 @@ const section = NAVIGATION.find(
   const bar = document.querySelector("aside[data-bar]")
   const toggle = bar?.querySelector("[data-nav-toggle]")
   const nav = bar?.querySelector("[data-site-nav]")
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)")
+
+  const openMenu = () => {
+    bar?.removeAttribute("data-menu-closing")
+    bar?.setAttribute("data-menu-open", "")
+    toggle?.setAttribute("aria-expanded", "true")
+  }
+
+  const closeMenu = () => {
+    bar?.removeAttribute("data-menu-open")
+    toggle?.setAttribute("aria-expanded", "false")
+    if (!reduceMotion.matches) {
+      bar?.setAttribute("data-menu-closing", "")
+    }
+  }
 
   toggle?.addEventListener("click", () => {
-    const open = bar.toggleAttribute("data-menu-open")
-    toggle.setAttribute("aria-expanded", String(open))
+    if (bar?.hasAttribute("data-menu-open")) {
+      closeMenu()
+    } else {
+      openMenu()
+    }
   })
 
   nav?.addEventListener("click", ({ target }) => {
     if (target instanceof Element && target.closest("a")) {
-      bar.removeAttribute("data-menu-open")
-      toggle.setAttribute("aria-expanded", "false")
+      closeMenu()
     }
+  })
+
+  nav?.addEventListener("animationend", ({ animationName }) => {
+    if (animationName === "site-nav-close") {
+      bar?.removeAttribute("data-menu-closing")
+    }
+  })
+
+  matchMedia("(width >= 40rem)").addEventListener("change", ({ matches }) => {
+    if (!matches) return
+    bar?.removeAttribute("data-menu-open")
+    bar?.removeAttribute("data-menu-closing")
+    toggle?.setAttribute("aria-expanded", "false")
   })
 </script>
