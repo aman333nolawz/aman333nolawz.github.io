@@ -9,24 +9,43 @@ const projects = await getAllProjects()
 
 <Layout crumbs={[{ label: "About", href: "/about" }]}>
   <MetaPage slot="head" title="About" />
-  <p class="about-intro">
-    Nolawz is just a curious mind wandering around the internet playing CTFs and
-    solving some minor problems.
-  </p>
-  <h2>Projects</h2>
-  <ul class="about-projects">
-    {projects.map((project) => <ProjectCard project={project} />)}
-  </ul>
+
+  <prose-content>
+    <h1>About</h1>
+    <p class="about-intro">
+      Nolawz is just a curious mind wandering around the internet playing CTFs
+      and solving some minor problems.
+    </p>
+  </prose-content>
+
+  <section class="projects" data-reveal>
+    <h2>Projects</h2>
+    <ul class="about-projects">
+      {projects.map((project) => <ProjectCard project={project} />)}
+    </ul>
+  </section>
 </Layout>
 
 <style>
   .about-intro {
-    margin-block-end: var(--space-l);
+    max-inline-size: 42ch;
+    font-size: var(--step-1);
+  }
+
+  .projects {
+    margin-block-start: var(--space-xl);
+  }
+
+  .projects h2 {
+    font-size: var(--step-2);
+    font-weight: var(--font-weight-medium);
+    margin: 0;
   }
 
   .about-projects {
     display: flex;
     flex-direction: column;
     gap: var(--space-m);
+    margin: var(--space-s) 0 0;
   }
 </style>

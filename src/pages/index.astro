@@ -1,31 +1,86 @@
 ---
+import ArrowRightIcon from "@/assets/icons/arrow-right.svg"
 import BlogCard from "@/components/BlogCard.astro"
 import MetaPage from "@/components/MetaPage.astro"
 import Layout from "@/layouts/Layout.astro"
 import { getPosts } from "@/lib/content"
 
-const posts = (await getPosts()).slice(0, 2)
+const posts = (await getPosts()).slice(0, 3)
+
+const wordmark = ["r", "e", "·", "b", "e", "l", "l", "·", "i", "o", "u", "s"]
+
+const interests = [
+  "capture the flag",
+  "operating systems",
+  "reverse engineering",
+  "static analysis",
+  "writing things that break",
+  "late night debugging",
+]
 ---
 
 <Layout>
   <MetaPage slot="head" title="Home" />
 
-  <div class="dictionary-entry">
-    <header>
-      <h1>re·bell·ious</h1>
-      <p class="pronunciation">
-        /rɪˈbɛljəs/ &bull; <span class="part-of-speech">adjective</span>
-      </p>
-    </header>
+  <section class="hero">
+    <h1 class="wordmark" aria-label="rebellious">
+      <span aria-hidden="true">
+        {wordmark.map((char, i) => (
+          <span
+            class:list={["char", char === "·" && "char-dot"]}
+            style={`--i: ${i}`}
+          >
+            {char}
+          </span>
+        ))}
+      </span>
+    </h1>
+
+    <span class="rule" aria-hidden="true"></span>
+
+    <p class="phonetic">
+      /rɪˈbɛljəs/ <span class="sep" aria-hidden="true">·</span>
+      <span class="part-of-speech">adjective</span>
+    </p>
+
     <p class="definition">
       Showing a desire to resist authority, control, or convention.
     </p>
+
+    <div class="hero-actions">
+      <a class="cta cta-primary" href="/blog">
+        Read the blog
+        <ArrowRightIcon aria-hidden="true" />
+      </a>
+      <a class="cta" href="/about">About me</a>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <div class="ticker-group">
+        {interests.map((interest) => (
+          <span class="ticker-item">
+            {interest}
+            <span class="ticker-sep">✦</span>
+          </span>
+        ))}
+      </div>
+      <div class="ticker-group" aria-hidden="true">
+        {interests.map((interest) => (
+          <span class="ticker-item">
+            {interest}
+            <span class="ticker-sep">✦</span>
+          </span>
+        ))}
+      </div>
+    </div>
   </div>
 
   <section class="latest-posts">
     <h2>Latest posts</h2>
     <ul>
-      {posts.map((post) => <BlogCard post={post} />)}
+      {posts.map((post, i) => <BlogCard post={post} revealDelay={i * 90} />)}
     </ul>
     <div class="see-all">
       <a href="/blog" id="see-all-posts">
@@ -52,37 +107,178 @@ const posts = (await getPosts()).slice(0, 2)
 </script>
 
 <style>
-  .dictionary-entry {
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: var(--space-m);
+  .hero {
+    position: relative;
+    isolation: isolate;
+    container-type: inline-size;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: var(--space-2xs);
+    padding-block: var(--space-xl) var(--space-l);
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -1rem -1.5rem 0;
+      z-index: -1;
+      background-image: radial-gradient(
+        circle at center,
+        color-mix(in oklab, var(--foreground) 13%, transparent) 1px,
+        transparent 1px
+      );
+      background-size: 22px 22px;
+      mask-image: radial-gradient(110% 80% at 45% 0%, #000 5%, transparent 70%);
+    }
   }
 
-  .dictionary-entry h1 {
-    font-family: var(--font-mono);
-    font-size: var(--step-3);
-    font-weight: var(--font-weight-medium);
-    letter-spacing: var(--tracking-tight);
-    line-height: 1.1;
+  .wordmark {
     margin: 0;
+    font-family: var(--font-mono);
+    font-size: clamp(2rem, 13cqi, 5.25rem);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    white-space: nowrap;
+    text-shadow: 0 0 2.5rem color-mix(in oklab, var(--red-9) 20%, transparent);
   }
 
-  .pronunciation {
+  .char {
+    display: inline-block;
+    animation: char-in 600ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    animation-delay: calc(var(--i) * 40ms);
+  }
+
+  .char-dot {
+    color: var(--red-9);
+  }
+
+  .rule {
+    display: block;
+    inline-size: 5rem;
+    block-size: 2px;
+    margin-block: var(--space-2xs) var(--space-2xs);
+    background-color: var(--red-9);
+    transform-origin: left center;
+    animation: rule-in 600ms cubic-bezier(0.16, 1, 0.3, 1) 560ms backwards;
+  }
+
+  .phonetic {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    margin: 0;
+    font-family: var(--font-mono);
     font-size: var(--step--1);
     color: var(--muted-foreground);
-    margin: 0;
+  }
+
+  .sep {
+    color: var(--red-9);
   }
 
   .part-of-speech {
     font-weight: var(--font-weight-medium);
+    color: var(--foreground);
   }
 
   .definition {
-    color: var(--muted-foreground);
+    max-inline-size: 34ch;
     margin: 0;
+    font-size: var(--step-1);
+    color: var(--muted-foreground);
+    animation: fade-in 500ms cubic-bezier(0.16, 1, 0.3, 1) 700ms backwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin-block-start: var(--space-s);
+  }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    font-size: var(--step--1);
+    text-decoration: none;
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease;
+
+    &:hover {
+      background-color: var(--muted);
+      border-color: var(--foreground);
+    }
+
+    svg {
+      inline-size: 0.9rem;
+      block-size: 0.9rem;
+      transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    &:hover svg {
+      transform: translateX(0.2rem);
+    }
+  }
+
+  .cta-primary {
+    background-color: var(--foreground);
+    border-color: var(--foreground);
+    color: var(--background);
+
+    &:hover {
+      background-color: light-dark(#ce2c31, #e5484d);
+      border-color: light-dark(#ce2c31, #e5484d);
+      color: var(--background);
+    }
+  }
+
+  .ticker {
+    overflow: hidden;
+    padding-block: var(--space-2xs);
+    border-block: 1px solid var(--border);
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 6%,
+      #000 94%,
+      transparent
+    );
+  }
+
+  .ticker-track {
+    display: flex;
+    inline-size: max-content;
+    animation: ticker-scroll 32s linear infinite;
+  }
+
+  .ticker-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    padding-inline-end: var(--space-s);
+  }
+
+  .ticker-item {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--muted-foreground);
+    white-space: nowrap;
+  }
+
+  .ticker-sep {
+    margin-inline-start: var(--space-s);
+    color: var(--red-9);
+  }
+
+  .ticker:hover .ticker-track {
+    animation-play-state: paused;
   }
 
   .latest-posts {
@@ -119,6 +315,7 @@ const posts = (await getPosts()).slice(0, 2)
     text-decoration: none;
     padding: var(--space-2xs) var(--space-s);
     border-radius: var(--radius-md);
+    transition: background-color 150ms ease;
   }
 
   #see-all-posts:hover {
@@ -132,5 +329,49 @@ const posts = (await getPosts()).slice(0, 2)
 
   #see-all-posts:hover .arrow {
     transform: translateX(0.25rem);
+  }
+
+  @keyframes char-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.35em) rotate(2deg);
+    }
+  }
+
+  @keyframes rule-in {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.4rem);
+    }
+  }
+
+  @keyframes ticker-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .char,
+    .rule,
+    .definition {
+      animation: none;
+    }
+
+    .ticker-track {
+      inline-size: auto;
+      flex-wrap: wrap;
+      animation: none;
+    }
+
+    .ticker-group[aria-hidden="true"] {
+      display: none;
+    }
   }
 </style>

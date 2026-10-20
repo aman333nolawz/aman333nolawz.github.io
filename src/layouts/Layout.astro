@@ -13,6 +13,7 @@ import "@/styles/layout.css"
 import "@/styles/icon-button.css"
 import "@/styles/bar.css"
 import "@/styles/shape.css"
+import "@/styles/motion.css"
 
 import Footer from "@/components/Footer.astro"
 import MetaHead from "@/components/MetaHead.astro"
@@ -26,6 +27,15 @@ const { crumbs } = Astro.props
 
 <html lang={SITE.locale} dir={SITE.dir}>
   <MetaHead>
+    <script is:inline>
+      document.documentElement.dataset.revealReady = ""
+      setTimeout(() => {
+        const html = document.documentElement
+        if (!html.hasAttribute("data-reveal-active")) {
+          html.dataset.revealFallback = ""
+        }
+      }, 3000)
+    </script>
     <slot name="head" />
   </MetaHead>
   <body>
@@ -49,6 +59,12 @@ const { crumbs } = Astro.props
     </page-grid>
   </body>
 </html>
+
+<script>
+  import { setupReveals } from "@/scripts/reveal"
+
+  setupReveals()
+</script>
 
 <style>
   page-grid {
